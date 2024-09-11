@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -11,6 +11,7 @@ exports.signup = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
+      role
     });
 
     await newUser.save();
