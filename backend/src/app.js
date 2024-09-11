@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const routes = require("./routes");
 const userRoutes = require("./routes/userRoutes");
+const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ mongoose
 app.use("/api", routes);
 
 app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome to the Node.js Framework Project!");

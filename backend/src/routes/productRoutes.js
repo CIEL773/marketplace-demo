@@ -1,6 +1,5 @@
 const express = require("express");
 const productControllers = require("../controllers/productController");
-console.log(productControllers);
 const router = express.Router();
 
 router.post("/createProduct", productControllers.createProduct);
