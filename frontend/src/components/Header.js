@@ -4,7 +4,7 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const Header = () => {
   return (
-    <div class="container">
+    <div class="container-fluid">
       <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         <div class="col-md-3 mb-2 mb-md-0">
           <a
@@ -26,12 +26,16 @@ const Header = () => {
         </form>
 
         <div class="col-md-3 text-end">
-          <button type="button" class="btn btn-outline-primary me-2">
-            Login
-          </button>
-          <button type="button" class="btn btn-outline-primary me-2">
-            Sign-up
-          </button>
+          <Link to="/login">
+            <button type="button" class="btn btn-outline-primary me-2">
+              Login
+            </button>
+          </Link>
+          <Link to="/signup">
+            <button type="button" class="btn btn-outline-primary me-2">
+              Sign-up
+            </button>
+          </Link>
           <Link to="/cart" className="text-decoration-none me-2">
             <i className="fas fa-shopping-cart fa-lg"></i>
           </Link>
