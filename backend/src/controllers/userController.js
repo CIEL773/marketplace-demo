@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 
 exports.signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -11,6 +11,7 @@ exports.signup = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
+      role
     });
 
     await newUser.save();
@@ -60,32 +61,34 @@ exports.updatePassword = async (req, res) => {
 
 exports.updateCart = async (req, res) => {
   try {
-    const { cartItems } = req.body;
+    const updatedItem = req.body; // {productId, quantity}
     const userId = req.params.id;
-    if (!Array.isArray(cartItems))
-      return res.status(400).json({ message: "Should be an array" });
-    const user = await User.findById(userId);
 
-    cartItems.forEach((item) => {
-      const productId = user.cart.findIndex((cartItem) => {
-        cartItem.productId.toString() === item.productId;
-      });
-      //update quantity
-      if (productId > -1) {
-        user.cart[productId].quantity = item.quantity;
-      }
-      //add new product
-      else {
-        user.cart.push({
-          productId: item.productId,
-          quantity: item.quantity,
-        });
-      }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // updatedProductIndex: index of the product in the cart
+    const updatedProductIndex = user.cart.findIndex((cartItem) => {
+      return cartItem.productId.toString() === updatedItem.productId.toString();
     });
+
+    // Update quantity 
+    if (updatedProductIndex > -1) {
+      user.cart[updatedProductIndex].quantity = updatedItem.quantity;
+    }
+    // Add new product 
+    else {
+      user.cart.push({
+        productId: updatedItem.productId,
+        quantity: updatedItem.quantity,
+      });
+    }
     await user.save();
     res.status(200).json({ cart: user.cart });
   } catch (err) {
-    res.status(500).json({ message: err });
+    res.status(500).json({ message: err.message || "Server error" });
   }
 };
 
@@ -102,3 +105,4 @@ exports.getCart = async (req, res) => {
     res.status(500).json({ message: err });
   }
 };
+
