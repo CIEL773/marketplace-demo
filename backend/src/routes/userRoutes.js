@@ -4,17 +4,15 @@ const userController = require("../controllers/userController");
 
 const router = express.Router();
 
-router.get("/getUser", userController.getUser);
-
 router.post("/signup", userController.signup);
 
 router.post("/signin", userController.signin);
 
 router.patch("/updatePassword/:id", userController.updatePassword);
 
-router.patch("/updateCart", userController.updateCart);
+router.patch("/updateCart/:id", userController.updateCart);
 
-router.get("/getCart", userController.getCart);
+router.get("/getCart/:id", userController.getCart);
 
 module.exports = router;
 

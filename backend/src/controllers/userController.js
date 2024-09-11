@@ -62,10 +62,8 @@ exports.updateCart = async (req, res) => {
   try {
     const { cartItems } = req.body;
     const userId = req.params.id;
-
     if (!Array.isArray(cartItems))
       return res.status(400).json({ message: "Should be an array" });
-
     const user = await User.findById(userId);
 
     cartItems.forEach((item) => {
@@ -74,7 +72,7 @@ exports.updateCart = async (req, res) => {
       });
       //update quantity
       if (productId > -1) {
-        user.cart[productId], (quantity = item.quantity);
+        user.cart[productId].quantity = item.quantity;
       }
       //add new product
       else {
@@ -84,7 +82,6 @@ exports.updateCart = async (req, res) => {
         });
       }
     });
-
     await user.save();
     res.status(200).json({ cart: user.cart });
   } catch (err) {
@@ -94,13 +91,8 @@ exports.updateCart = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   try {
-    const { cartItems } = req.body;
     const userId = req.params.id;
     const user = await User.findById(userId);
-
-    if (!Array.isArray(cartItems))
-      return res.status(400).json({ message: "Should be an array" });
-
     if (user.cart.length === 0)
       return res.status(200).json({ message: "No item in the cart." });
     else {
