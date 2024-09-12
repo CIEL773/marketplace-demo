@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import ProductList from "./components/ProductList";
 import ProductDetail from "./components/ProductDetail";
 
 function App() {
@@ -13,9 +14,10 @@ function App() {
       <main className="flex-fill">
         {/* Add other routes here */}
         <Routes>
+          <Route path="/" element={<ProductList />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/details" element={<ProductDetail />} />
         </Routes>
       </main>
       <Footer />
