@@ -22,9 +22,50 @@ exports.createProduct = async (req, res) => {
   }
 };
 
-exports.updateProduct = async (req, res) => {};
+exports.updateProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+    const { name, description, category, price, stock, imageUrl, vendor } = req.body;
 
-exports.getProduct = async (req, res) => {};
+    const updatedProduct = await Product.findByIdAndUpdate(
+      productId,
+      {
+        name,
+        description,
+        category,
+        price,
+        stock,
+        imageUrl,
+        vendor
+      },
+      { new: true }
+    );
+
+    if (!updatedProduct) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json({ message: 'Product updated successfully', product: updatedProduct });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update product', err });
+  }
+};
+
+exports.getProduct = async (req, res) => {
+  try {
+    const productId = req.params.id;
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.status(200).json({ product });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to get product', err });
+  }
+};
 
 // Product
 // CreateProduct post
