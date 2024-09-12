@@ -1,6 +1,21 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 
+exports.getUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to get user', err });
+  }
+}
+
 exports.signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -38,13 +53,13 @@ exports.signin = async (req, res) => {
 };
 
 exports.updatePassword = async (req, res) => {
-  const { id } = req.params;
-  const { password } = req.body;
   try {
+    const userId = req.params.id;
+    const { password } = req.body;
+
     const hashedPassword = await bcrypt.hash(password, 12);
-    // console.log(hashedPassword);
     const updatePassword = await User.findByIdAndUpdate(
-      id,
+      userId,
       { password: hashedPassword },
       { new: true }
     );
@@ -61,8 +76,8 @@ exports.updatePassword = async (req, res) => {
 
 exports.updateCart = async (req, res) => {
   try {
-    const updatedItem = req.body; // {productId, quantity}
     const userId = req.params.id;
+    const updatedItem = req.body; // {productId, quantity}
 
     const user = await User.findById(userId);
     if (!user) {
