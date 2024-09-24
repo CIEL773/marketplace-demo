@@ -2,10 +2,11 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import LoginPage from "./pages/LoginPage";
+import SigninPage from "./pages/SigninPage";
 import SignupPage from "./pages/SignupPage";
 import ProductList from "./components/ProductList";
 import ProductDetail from "./components/ProductDetail";
+import AddProductForm from "./components/AddProductForm";
 
 function App() {
   return (
@@ -16,8 +17,9 @@ function App() {
         <Routes>
           <Route path="/" element={<ProductList />} />
           <Route path="/products/:id" element={<ProductDetail />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<SigninPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="/addproduct" element={<AddProductForm />} />
         </Routes>
       </main>
       <Footer />
