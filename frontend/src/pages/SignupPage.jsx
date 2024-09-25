@@ -1,61 +1,46 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from "react-redux";
 import { signupUser } from "../features/usersSlice"; // Import the signup action
 import { useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const SignupPage = () => {
+  const { userInfo, loading, error, success } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // State to manage form input values
-  const [formData, setFormData] = useState({
-    name: "", // Changed from 'username' to 'name'
-    email: "",
-    password: "",
-    userType: ""
-  });
+  const { register, handleSubmit } = useForm()
 
-  const { userInfo, loading, error } = useSelector((state) => state.user);
-
-  // Handle input change
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  useEffect(() => {
+    // redirect authenticated user to profile screen
+    if (userInfo) navigate('/profile')
+    // redirect user to login page if registration was successful
+    if (success) navigate('/login')
+  }, [navigate, userInfo, success])
 
   // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Dispatch the signup action
-    dispatch(signupUser(formData));
+  const submitForm = (data) => {
+    dispatch(signupUser(data));
   };
 
-  // Effect to handle navigation after signup
-  useEffect(() => {
-    if (userInfo) {
-      navigate("/"); // Redirect to homepage on successful signup
-    }
-  }, [userInfo, navigate]);
+  console.log("SignupPage userInfo:", userInfo)
 
   return (
     <div>
       <main className="form-signin col-lg-3 m-auto">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(submitForm)}>
           <h1 className="h3 mb-3 fw-normal">Please sign up</h1>
 
-          {/* Name field (previously Username) */}
+          {/* Name field*/}
           <div className="form-floating mb-3">
             <input
               type="text"
               className="form-control"
               id="floatingName"
               placeholder="Name"
-              name="name" // Changed from 'username' to 'name'
-              value={formData.name}
-              onChange={handleChange}
+              name="name"
+              {...register('name')}
               required
             />
             <label htmlFor="floatingName">Name</label>
@@ -69,8 +54,7 @@ const SignupPage = () => {
               id="floatingInput"
               placeholder="name@example.com"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
+              {...register('email')}
               required
             />
             <label htmlFor="floatingInput">Email address</label>
@@ -84,8 +68,7 @@ const SignupPage = () => {
               id="floatingPassword"
               placeholder="Password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
               required
             />
             <label htmlFor="floatingPassword">Password</label>
@@ -98,8 +81,7 @@ const SignupPage = () => {
               id="floatingSelect"
               aria-label="User Type"
               name="userType"
-              value={formData.userType}
-              onChange={handleChange}
+              {...register('role')}
               required
             >
               <option value="" disabled>

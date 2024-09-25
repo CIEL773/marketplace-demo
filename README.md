@@ -101,6 +101,63 @@ cd marketplace-demo
 - **Frontend Environment Variables** (in `frontend/.env`):
   - `REACT_APP_API_URL`: The base URL for API requests (default: `http://localhost:3000`)
 
+## Database Models
+This project uses MongoDB as the database, with Mongoose to define and manipulate the data models. Below are the two main models in the project: User and Product.
+
+1. User Model:
+
+- name (String, required): The user's full name.
+- email (String, required, unique): The user's email address, which must be unique.
+- role (String, enum: ["user", "vendor"], default: "user"): The role of the user, which can either be user (regular user) or vendor (seller).
+- password (String, required): The user's password, which should be stored in hashed form.
+- address (String, optional): The user's address.
+- cart (Array of Objects, default: []): The user's shopping cart. Each item in the cart contains a product ID and quantity.
+- productId (ObjectId, required): A reference to the Product model, representing the product in the cart.
+quantity (Number, min: 1): The quantity of the product, with a minimum value of 1.
+- productList (Array of ObjectId, default: []): A list of products created by the user (only applicable if the user is a vendor), referencing the Product model.
+
+Example of a User document:
+```json
+{
+  "name": "testuser",
+  "email": "user@example.com",
+  "role": "vendor",
+  "password": "password123",
+  "address": "123 Main St, Anytown, USA",
+  "cart": [
+    {
+      "productId": "60f8f0d5b9d1b34a5d8b9d84",
+      "quantity": 2
+    }
+  ],
+  "productList": ["60f8f0d5b9d1b34a5d8b9d85"]
+}
+```
+
+2. Product Model
+
+- name (String, required): The name of the product.
+- description (String, optional): A description of the product.
+- category (String, optional): The category the product belongs to.
+- price (Number, required): The price of the product.
+- stock (Number, required, min: 0, default: 0): The stock quantity of the product, with a minimum value of 0.
+- imageUrl (String, required): The URL of the product's image.
+- vendor (ObjectId, ref: "user", required): A reference to the User model, representing the seller of the product.
+
+Example of a Product document:
+
+```json
+{
+  "name": "Smartphone",
+  "description": "A high-end smartphone with 128GB storage",
+  "category": "Electronics",
+  "price": 699,
+  "stock": 50,
+  "imageUrl": "https://example.com/images/smartphone.jpg",
+  "vendor": "60f8f0d5b9d1b34a5d8b9d84"
+}
+```
+
 ## API Endpoints
 
 ### Users

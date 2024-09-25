@@ -12,11 +12,18 @@ exports.getProducts = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
   try {
-    const { name, description, category, price, stock, imageUrl, vendor } =
-      req.body;
+    //Original: Get from req.body
+    // const { name, description, category, price, stock, imageUrl, vendor } =
+    //   req.body;
+    // 
+    // const user = await User.findById(vendor);
+
+    //Updated: get VendorId from token
+    const {name, description, category, price, stock, imageUrl} = req.body;
+    const vendorId = req.user.id;
 
     //check if the user is a vendor
-    const user = await User.findById(vendor);
+    const user = await User.findById(vendorId);
     if (!user || user.role !== 'vendor'){
       return res.status(403).json({message: "Only Vendors can create new products."});
     }
@@ -28,7 +35,7 @@ exports.createProduct = async (req, res) => {
       price,
       stock,
       imageUrl,
-      vendor,
+      vendor: vendorId,
     });
 
     await newProduct.save();
@@ -45,8 +52,9 @@ exports.createProduct = async (req, res) => {
 
 exports.updateProduct = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const { productId, name, description, category, price, stock, imageUrl, vendor } = req.body;
+    const productId = req.params.id;
+    const userId = req.user.id;
+    const { name, description, category, price, stock, imageUrl, vendor } = req.body;
 
     // check if the user the same user who created the product
     if(userId.toString() !== vendor.toString()){
@@ -95,8 +103,10 @@ exports.getProduct = async (req, res) => {
 
 exports.getProductByUserId = async (req, res) => {
   try {
-    const userId = req.params.userId;
+    // const userId = req.params.userId;
+    const userId = req.user.id;
     const user = await User.findById(userId);
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -109,11 +119,16 @@ exports.getProductByUserId = async (req, res) => {
 
     const productList = user.productList;
     
-    const products = await Promise.all(
-      productList.map((productId) => Product.findById(productId).select('name stock imageUrl'))
-    );
+    // Original:
+    // v1
+    // const products = await Promise.all(
+    //   productList.map((productId) => Product.findById(productId).select('name stock imageUrl'))
+    // );
+    // v2
     //const products = await Product.find({ _id: { $in: productList } });
- 
+
+    //Updated:
+    const products = await Product.find({vendor: userId}).select('name stock imageUrl');
     // Only include name stock and image in products
     res.status(200).json(products);
   } catch (err) {

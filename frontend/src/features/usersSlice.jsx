@@ -1,14 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const backendURL = 'http://localhost:4000'
+
+// initialize userToken from local storage
+const token = localStorage.getItem('token')
+    ? localStorage.getItem('token')
+    : null
 
 // Async thunk for user signin
 export const signinUser = createAsyncThunk(
     "user/signin",
     async (formData, { rejectWithValue }) => {
         try {
-            // const response = await axios.post(${API_URL}/api/users/signin, formData);
-            const response = await axios.post("http://localhost:4000/api/users/signin", formData);
-            return response.data;
+            const response = await axios.post(`${backendURL}/api/users/signin`, formData);
+            console.log("response: ", response);
+            console.log("response.data: ", response.data);
+
+            // Store user data in localStorage (adjust keys as needed)
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem("userInfo", JSON.stringify(response.data.user));  // Store user info
+
+            return response.data.user;
         } catch (error) {
             return rejectWithValue(error.response.data.message);
         }
@@ -20,8 +32,26 @@ export const signupUser = createAsyncThunk(
     "user/signup",
     async (formData, { rejectWithValue }) => {
         try {
-            const response = await axios.post("http://localhost:4000/api/users/signup", formData);
+            const response = await axios.post(`${backendURL}/api/users/signup`, formData);
             return response.data.user;
+        } catch (error) {
+            return rejectWithValue(error.response.data.message);
+        }
+    }
+);
+
+// Action for user signout
+export const signoutUser = createAsyncThunk(
+    "user/signout",
+    async (_, { rejectWithValue }) => {
+        try {
+            await axios.post(`${backendURL}/api/users/signout`);
+            localStorage.removeItem('userInfo');
+
+            dispatch({
+                type: 'user/signout',
+              });
+
         } catch (error) {
             return rejectWithValue(error.response.data.message);
         }
@@ -31,11 +61,20 @@ export const signupUser = createAsyncThunk(
 const usersSlice = createSlice({
     name: "user",
     initialState: {
-        userInfo: null,
+        userInfo: null, // for user object
+        token, // for storing token
         loading: false,
         error: null,
+        success: false, // for monitoring the registration process
     },
-    reducers: {},
+    reducers: {
+        setUserInfo: (state, action) => {
+            state.userInfo = action.payload;
+        },
+        clearUserInfo: (state) => {
+            state.userInfo = null;
+        },
+    },
     extraReducers: (builder) => {
         builder
             // Handle signin
@@ -47,6 +86,7 @@ const usersSlice = createSlice({
                 state.loading = false;
                 state.userInfo = action.payload;
                 state.error = null;
+                state.success = true;
             })
             .addCase(signinUser.rejected, (state, action) => {
                 state.loading = false;
@@ -60,14 +100,22 @@ const usersSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userInfo = action.payload;  // Save the new user info here
+                state.userInfo = action.payload;
                 state.error = null;
+                state.success = true;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            // Handle signout
+            .addCase(signoutUser.fulfilled, (state) => {
+                state.userInfo = null;
+                state.success = false;
             });
     },
 });
 
 export default usersSlice.reducer;
+export const { setUserInfo, clearUserInfo } = usersSlice.actions;

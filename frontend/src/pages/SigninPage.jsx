@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useForm } from 'react-hook-form'
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../features/usersSlice";
@@ -9,30 +10,25 @@ const SigninPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { userInfo, loading, error } = useSelector((state) => state.user);
-  const [formData, setFormData] = useState({ email: "", password: "" });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+  const { register, handleSubmit } = useForm()
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(signinUser(formData));
-  };
-
+  // redirect authenticated user to profile screen
   useEffect(() => {
     if (userInfo) {
-      navigate("/");
+      navigate('/profile')
     }
-  }, [userInfo, navigate]);
+  }, [navigate, userInfo])
+
+  const submitForm = (data) => {
+    dispatch(signinUser(data))
+  }
+
 
   return (
     <div>
       <main className="form-signin col-lg-3 m-auto">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(submitForm)}>
           <h1 className="h3 mb-3 fw-normal">Please sign in</h1>
 
           <div className="form-floating">
@@ -42,8 +38,7 @@ const SigninPage = () => {
               id="floatingInput"
               name="email"
               placeholder="name@example.com"
-              value={formData.email}
-              onChange={handleChange}
+              {...register('email')}
             />
             <label htmlFor="floatingInput">Email address</label>
           </div>
@@ -55,12 +50,12 @@ const SigninPage = () => {
               id="floatingPassword"
               name="password"
               placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
+              {...register('password')}
             />
             <label htmlFor="floatingPassword">Password</label>
           </div>
 
+          {/* todo */}
           <div className="form-check text-start my-3">
             <input
               className="form-check-input"

@@ -33,7 +33,22 @@ export const createProduct = createAsyncThunk(
   "product/createProduct",
   async (productData, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:4000/api/products/createProduct", productData);
+      const token = localStorage.getItem("token"); // get token
+
+      // include the token in the product data
+      const payload = {
+        ...productData,
+        token:token
+      }
+
+      const response = await axios.post("http://localhost:4000/api/products/createProduct", payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // If you need to send the token in the headers
+          },
+        }
+      );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

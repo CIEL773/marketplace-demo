@@ -19,7 +19,7 @@ const AddProductForm = () => {
     price: '',
     stock: '',
     imageUrl: '',
-  })
+  });
 
 
   const handleChange = (e) => {
@@ -30,15 +30,26 @@ const AddProductForm = () => {
     });
   };
 
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    //dispatch
-    dispatch(createProduct(product));
+    // Dispatch the action to create the product (vendor ID will be handled by the createProduct function)
+    dispatch(createProduct(product)); 
+
+    // Reset form fields after submission
+    setProduct({
+      name: '',
+      description: '',
+      category: '',
+      price: '',
+      stock: '',
+      imageUrl: '',
+    });
   };
 
 
   return (
-    <Form onSubmit={handleSubmit} >
+    <Form onSubmit={handleSubmit} className="col-md-5 mx-auto" >
       <Form.Group className="mb-3" controlId="formProductName">
         <Form.Label>Product Name</Form.Label>
         <Form.Control
@@ -113,9 +124,18 @@ const AddProductForm = () => {
         />
       </Form.Group>
 
-      <Button variant="primary" type="submit">
-        Add Product
-      </Button>
+      {/* Show loading or error feedback */}
+      {loading ? (
+        <Button variant="primary" disabled>
+          Adding Product...
+        </Button>
+      ) : (
+        <Button variant="primary" type="submit">
+          Add Product
+        </Button>
+      )}
+
+    {error && <p className="text-danger mt-2">Error: {error.message ? error.message : error}</p>}
     </Form>
   )
 }

@@ -1,20 +1,21 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const jwt = require("../jwt");
 
 exports.getUser = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const user = await User.findById(userId);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     res.status(200).json(user);
   } catch (err) {
-    res.status(500).json({ message: 'Failed to get user', err });
+    res.status(500).json({ message: "Failed to get user", err });
   }
-}
+};
 
 exports.signup = async (req, res) => {
   try {
@@ -26,7 +27,7 @@ exports.signup = async (req, res) => {
       name: name,
       email: email,
       password: hashedPassword,
-      role
+      role,
     });
 
     await newUser.save();
@@ -36,6 +37,7 @@ exports.signup = async (req, res) => {
   }
 };
 
+//returns a token
 exports.signin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -46,15 +48,34 @@ exports.signin = async (req, res) => {
       return res.status(400).json({ message: "password is incorrect" });
     }
 
-    res.status(200).json({ message: "signin succeed" });
+    const token = jwt.generateToken(user); //generate token
+
+    res.status(200).json({
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        // avatar: user.avatar || ""
+      },
+    });
   } catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
+exports.signout = (req, res) => {
+  try {
+    res.status(200).json({ message: "Signout successful" });
+  } catch (err) {
+    res.status(500).json({ message: err.message || "Server error" });
+  }
+};
+
 exports.updatePassword = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const { password } = req.body;
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -76,7 +97,7 @@ exports.updatePassword = async (req, res) => {
 
 exports.updateCart = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const updatedItem = req.body; // {productId, quantity}
 
     const user = await User.findById(userId);
@@ -89,11 +110,11 @@ exports.updateCart = async (req, res) => {
       return cartItem.productId.toString() === updatedItem.productId.toString();
     });
 
-    // Update quantity 
+    // Update quantity
     if (updatedProductIndex > -1) {
       user.cart[updatedProductIndex].quantity = updatedItem.quantity;
     }
-    // Add new product 
+    // Add new product
     else {
       user.cart.push({
         productId: updatedItem.productId,
@@ -109,15 +130,29 @@ exports.updateCart = async (req, res) => {
 
 exports.getCart = async (req, res) => {
   try {
-    const userId = req.params.id;
+    const userId = req.user.id;
     const user = await User.findById(userId);
     if (user.cart.length === 0)
       return res.status(200).json({ message: "No item in the cart." });
     else {
-      res.status(200).json({ cart: user.cart });
+      res.status(200).json(user.cart);
     }
   } catch (err) {
     res.status(500).json({ message: err });
   }
 };
 
+// {
+//   "cartItems": [
+//     {
+//       "_id": "product1",
+//       "productId": "prod1",
+//       "quantity": 2
+//     },
+//     {
+//       "_id": "product2",
+//       "productId": "prod2",
+//       "quantity": 1
+//     }
+//   ]
+// }
