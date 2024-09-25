@@ -8,6 +8,7 @@ export const fetchProducts = createAsyncThunk(
     try {
       const response = await axios.get("http://localhost:4000/api/products");
       return response.data;
+      // console.log(response.data);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -53,14 +54,15 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+const initialState = {
+  products: [],
+  loading: false,
+  error: null,
+};
+
 const productSlice = createSlice({
   name: "product",
-  initialState: {
-    products: [],
-    product: null, // For storing a single product
-    loading: false,
-    error: null,
-  },
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder

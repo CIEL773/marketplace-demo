@@ -46,10 +46,10 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { name, description, category, price, stock, imageUrl, vendor } = req.body;
+    const { productId, name, description, category, price, stock, imageUrl, vendor } = req.body;
 
     // check if the user the same user who created the product
-    if(userId !== vendor){
+    if(userId.toString() !== vendor.toString()){
       return res.status(403).json({message: "Only owner of the product can update it."});
     }
 
@@ -103,7 +103,7 @@ exports.getProductByUserId = async (req, res) => {
 
     //Vendor get all the products they put up.
     if(user.role !== 'vendor'){
-      return res.status(403).json({message: "Only owner of the product can update it."});
+      return res.status(403).json({message: "Only vendor can view their product list."});
     }
 
 
