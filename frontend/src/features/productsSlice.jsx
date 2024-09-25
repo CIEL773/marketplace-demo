@@ -19,7 +19,7 @@ export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`/api/products/getProduct/${id}`);
+      const response = await axios.get(`http://localhost:4000/api/products/getProduct/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -45,7 +45,7 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, productData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/api/products/updateProduct/${id}`, productData);
+      const response = await axios.put(`http://localhost:4000/api/products/updateProduct/${id}`, productData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

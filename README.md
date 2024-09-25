@@ -121,3 +121,31 @@ cd marketplace-demo
 - `GET /api/products/getProductByUserId/:userId` - Get products by userId
 
 ---
+
+## ToDo List
+
+1. **Frontend**
+   - Media queries (responsive design)
+   - Error handling
+   - Image preview/upload
+   - Pagination
+
+2. **Authentication**
+   - Sign-up page (auto-check)
+   - Change password page
+   - JWT (authentication)
+   - SendGrid API (email verification)
+
+3. **Product Management**
+   - Add product button
+
+4. **Shopping Features**
+   - Search
+   - Cart
+
+5. **Payment Integration**
+   - Stripe API (payment)
+
+6. **Libraries/Tools**
+   - React Moment (date formatting)
+   - Formik (form handling)
