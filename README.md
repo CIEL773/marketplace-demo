@@ -13,6 +13,7 @@
 - Database: MongoDB (NoSQL database)
 
 - Others:
+
   - Axios (for HTTP requests)
   - JWT (for user authentication) (todo)
   - Mongoose (for MongoDB ORM)
@@ -23,7 +24,9 @@
 The system allows managing products with features such as listing products, viewing product details, and user authentication (sign-in, sign-up). It includes both backend and frontend implementations with API routes for handling data operations.
 
 ## Getting Started
+
 ### Prerequisites
+
 - Node.js (v14 or higher)
 - npm or yarn
 - MongoDB (local or remote instance)
@@ -38,22 +41,26 @@ cd marketplace-demo
 ### Backend Setup
 
 1. Navigate to the backend directory:
+
    ```bash
    cd backend
    ```
 
 2. Install backend dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create a `.env` file in the `backend` directory and add your MongoDB connection string and other environment variables:
+
    ```env
    MONGODB_URI=<Your MongoDB URI>
    JWT_SECRET=<Your JWT Secret>
    ```
 
 4. Start the backend server:
+
    - For production mode:
      ```bash
      npm start
@@ -70,21 +77,25 @@ cd marketplace-demo
 ### Frontend Setup
 
 1. Navigate to the frontend directory:
+
    ```bash
    cd frontend
    ```
 
 2. Install frontend dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create a `.env` file in the `frontend` directory (if needed for API URL configuration):
+
    ```env
    REACT_APP_API_URL=http://localhost:3000
    ```
 
 4. Start the frontend server:
+
    ```bash
    npm start
    ```
@@ -94,6 +105,7 @@ cd marketplace-demo
 ## Environment Variables
 
 - **Backend Environment Variables** (in `backend/.env`):
+
   - `MONGODB_URI`: MongoDB connection string
   - `JWT_SECRET`: Secret for signing JWT tokens (todo)
   - `PORT`: Backend server port (optional, default is `4000`)
@@ -102,6 +114,7 @@ cd marketplace-demo
   - `REACT_APP_API_URL`: The base URL for API requests (default: `http://localhost:3000`)
 
 ## Database Models
+
 This project uses MongoDB as the database, with Mongoose to define and manipulate the data models. Below are the two main models in the project: User and Product.
 
 1. User Model:
@@ -113,10 +126,11 @@ This project uses MongoDB as the database, with Mongoose to define and manipulat
 - address (String, optional): The user's address.
 - cart (Array of Objects, default: []): The user's shopping cart. Each item in the cart contains a product ID and quantity.
 - productId (ObjectId, required): A reference to the Product model, representing the product in the cart.
-quantity (Number, min: 1): The quantity of the product, with a minimum value of 1.
+  quantity (Number, min: 1): The quantity of the product, with a minimum value of 1.
 - productList (Array of ObjectId, default: []): A list of products created by the user (only applicable if the user is a vendor), referencing the Product model.
 
 Example of a User document:
+
 ```json
 {
   "name": "testuser",
@@ -182,25 +196,30 @@ Example of a Product document:
 ## ToDo List
 
 1. **Frontend**
+
    - Media queries (responsive design)
    - Error handling
    - Image preview/upload
    - Pagination
 
 2. **Authentication**
+
    - Sign-up page (auto-check)
    - Change password page
    - JWT (authentication)
    - SendGrid API (email verification)
 
 3. **Product Management**
+
    - Add product button
 
 4. **Shopping Features**
+
    - Search
    - Cart
 
 5. **Payment Integration**
+
    - Stripe API (payment)
 
 6. **Libraries/Tools**
