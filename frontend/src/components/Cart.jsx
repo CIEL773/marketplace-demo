@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { getCart, updateCart } from "../features/cartSlice";
+import { fetchProductById } from "../features/productsSlice";
+import CartItem from "./CartItem";
 
 function Cart() {
   // handle offcanvas status
@@ -19,16 +21,65 @@ function Cart() {
   const dispatch = useDispatch();
   const { cartItems, loading, error } = useSelector((state) => state.cart);
 
+  const [fetchedProducts, setFetchedProducts] = useState([]);
+  const { products } = useSelector((state) => state.product);
+
   useEffect(() => {
     dispatch(getCart()); // Fetch the cart when the component mounts
   }, [dispatch]);
 
-  const handleUpdateCart = (updatedCart) => {
-    dispatch(updateCart(updatedCart)); // Update the cart with new items/quantities
+  // fetch product details based on cartItems
+  useEffect(() => {
+    const fetchProducts = async () => {
+      if (cartItems.length > 0) {
+        try {
+          const productFetchPromises = cartItems.map((item) => {
+            // Dispatch fetchProductById for each productId
+            return dispatch(fetchProductById(item.productId)).unwrap();
+          });
+
+          const products = await Promise.all(productFetchPromises); // Resolve all promises
+
+          // combine product details with cart item quantities
+          const cartWithDetails = cartItems.map((cartItem) => {
+            const productDetails = products.find(
+              (product) => product._id === cartItem.productId
+            );
+            return { ...productDetails, quantity: cartItem.quantity };
+          });
+          setFetchedProducts(cartWithDetails); // Set the fetched product details
+        } catch (err) {
+          console.error("Error fetching product details:", err);
+        }
+      }
+    };
+
+    fetchProducts();
+  }, [cartItems, dispatch]);
+
+  // Handle increasing the quantity (+1)
+  const handleIncreaseQuantity = (product) => {
+    const updatedCart = fetchedProducts.map((item) =>
+      item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+    );
+    // console.log("updatedCart", updatedCart);
+    dispatch(updateCart(updatedCart));
+  };
+
+  // Handle decreasing the quantity (-1)
+  const handleDecreaseQuantity = (product) => {
+    // const updatedCart = fetchedProducts.map((item) =>
+    //   item._id === product._id && item.quantity > 1
+    //     ? { ...item, quantity: item.quantity - 1 }
+    //     : item
+    // );
+    // dispatch(updateCart(updatedCart));
   };
 
   console.log("cartItems", cartItems);
   console.log("cartItems", typeof cartItems);
+  console.log("Is cartItems an array?", Array.isArray(cartItems));
+  console.log("fetchedProducts", fetchedProducts);
 
   return (
     <>
@@ -45,13 +96,18 @@ function Cart() {
             <p>Loading...</p>
           ) : error ? (
             <p className="text-danger">{error}</p>
-          ) : cartItems && !Array.isArray(cartItems) ||cartItems.length === 0 ? (
+          ) : (fetchedProducts && !Array.isArray(fetchedProducts)) ||
+            fetchedProducts.length === 0 ? (
             <p>Your cart is empty.</p>
           ) : (
             <ul style={{ padding: 0, listStyle: "none" }}>
-              {cartItems.map((item) => (
+              {fetchedProducts.map((item) => (
                 <li key={item._id} style={{ marginBottom: "15px" }}>
-                  <p>{item.productId}</p>
+                  <CartItem
+                    product={item} // Pass product details with quantity
+                    onIncreaseQuantity={handleIncreaseQuantity}
+                    onDecreaseQuantity={handleDecreaseQuantity}
+                  />
                 </li>
               ))}
             </ul>
@@ -59,51 +115,6 @@ function Cart() {
         </Offcanvas.Body>
       </Offcanvas>
     </>
-  );
-}
-
-function itemCard(product) {
-  const navigate = useNavigate();
-
-  const handleViewDetails = () => {
-    navigate(`/products/${product._id}`);
-  };
-
-  return (
-    <Card className="mb-3 shadow-sm" onClick={handleViewDetails}>
-      <Row className="mb-3">
-        <Card.Img
-          variant="top"
-          as={Col}
-          src={product.image || "https://picsum.photos/150"}
-          alt={product.name}
-        />
-        <Card.Body as={Col}>
-          <Card.Title className="text-muted" as={Col}>
-            {product.name}
-          </Card.Title>
-          <Card.Text>
-            <strong>${product.price}</strong>
-          </Card.Text>
-          <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-            <Button
-              className="w-50 me-2"
-              variant="primary"
-              onClick={() => onAddToCart(product)}
-            >
-              Add
-            </Button>
-            <Button
-              className="w-50"
-              variant="light"
-              onClick={() => onRemove(product)}
-            >
-              Remove
-            </Button>
-          </div>
-        </Card.Body>
-      </Row>
-    </Card>
   );
 }
 
