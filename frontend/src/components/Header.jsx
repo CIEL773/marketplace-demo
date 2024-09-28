@@ -1,14 +1,38 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { signoutUser } from "../features/usersSlice";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Cart from "./Cart";
-// import axios from "axios";
+import { searchProducts } from "../features/productsSlice";
+import debounce from 'lodash/debounce';
+
 
 const Header = () => {
   const dispatch = useDispatch();
-  const { userInfo } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  const { userInfo, loading: signoutLoading, error: signoutError } = useSelector((state) => state.user);
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // 使用 useMemo 确保防抖函数不会在每次渲染时都重新创建
+  const debouncedSearch = useMemo(() =>
+    debounce((query) => {
+      if (query.trim() !== "") {
+        dispatch(searchProducts({ query })); // 调用 Redux 中的 searchProducts
+        navigate(`/search?query=${query}`); // 导航到搜索页面
+      }
+    }, 500), [dispatch, navigate]); // 500ms 防抖延迟
+
+  // 当搜索框的值改变时调用 debouncedSearch
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedSearch(value);
+  };
+
 
   const handleSignout = async () => {
     try {
@@ -30,13 +54,15 @@ const Header = () => {
           </a>
         </div>
 
-        <form className="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+        <form className="d-flex" onSubmit={(e) => e.preventDefault()}>
           <input
-            type="search"
-            className="form-control form-control-light text-bg-light"
-            placeholder="Search..."
-            aria-label="Search"
+            type="text"
+            className="form-control me-2"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={handleInputChange}
           />
+          <button className="btn btn-outline-primary" type="submit" onClick={() => debouncedSearch(searchQuery)}>Search</button>
         </form>
 
         <div className="col-md-3 text-end">
@@ -72,9 +98,6 @@ const Header = () => {
               </Link>
             </>
           )}
-          {/* <Link to="/cart" className="text-decoration-none me-2">
-            <i className="fas fa-shopping-cart fa-lg"></i>
-          </Link> */}
           <Cart />
         </div>
       </header>

@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Col from 'react-bootstrap/Col';
-import Row from 'react-bootstrap/Row';
-import { createProduct } from "../features/productsSlice";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
+import { createProduct, resetAddedSuccess } from "../features/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { Alert } from "react-bootstrap";
 
 const AddProductForm = () => {
-
   const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.product);
+  const { loading, error, addedSuccess } = useSelector((state) => state.product);
 
   const [product, setProduct] = useState({
-    name: '',
-    description: '',
-    category: '',
-    price: '',
-    stock: '',
-    imageUrl: '',
+    name: "",
+    description: "",
+    category: "",
+    price: "",
+    stock: "",
+    imageUrl: "",
   });
 
+  const [showAlert, setShowAlert] = useState(false); // Alert state
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,22 +35,35 @@ const AddProductForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Dispatch the action to create the product (vendor ID will be handled by the createProduct function)
-    dispatch(createProduct(product)); 
+    dispatch(createProduct(product));
 
     // Reset form fields after submission
     setProduct({
-      name: '',
-      description: '',
-      category: '',
-      price: '',
-      stock: '',
-      imageUrl: '',
+      name: "",
+      description: "",
+      category: "",
+      price: "",
+      stock: "",
+      imageUrl: "",
     });
   };
 
+  // handle successfully added alert
+  useEffect(() => {
+    if (addedSuccess) {
+      // Show the success alert when the product is added
+      setShowAlert(true);
+
+      // Hide the alert after 3 seconds
+      setTimeout(() => {
+        setShowAlert(false);
+        dispatch(resetAddedSuccess()); // Reset success state in Redux
+      }, 2000);
+    }
+  }, [addedSuccess, dispatch]);
 
   return (
-    <Form onSubmit={handleSubmit} className="col-md-5 mx-auto" >
+    <Form onSubmit={handleSubmit} className="col-md-5 mx-auto">
       <Form.Group className="mb-3" controlId="formProductName">
         <Form.Label>Product Name</Form.Label>
         <Form.Control
@@ -72,7 +86,6 @@ const AddProductForm = () => {
           onChange={handleChange}
         />
       </Form.Group>
-
 
       <Form.Group className="mb-3" controlId="formProductCategory">
         <Form.Label>Category</Form.Label>
@@ -124,6 +137,17 @@ const AddProductForm = () => {
         />
       </Form.Group>
 
+      {/* Show success alert */}
+      {showAlert && (
+        <Alert
+          variant="success"
+          onClose={() => setShowAlert(false)}
+          dismissible
+        >
+          Product added successfully!
+        </Alert>
+      )}
+
       {/* Show loading or error feedback */}
       {loading ? (
         <Button variant="primary" disabled>
@@ -135,9 +159,13 @@ const AddProductForm = () => {
         </Button>
       )}
 
-    {error && <p className="text-danger mt-2">Error: {error.message ? error.message : error}</p>}
+      {error && (
+        <p className="text-danger mt-2">
+          Error: {error.message ? error.message : error}
+        </p>
+      )}
     </Form>
-  )
-}
+  );
+};
 
 export default AddProductForm;

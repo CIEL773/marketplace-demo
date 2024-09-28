@@ -136,8 +136,16 @@ exports.getProductByUserId = async (req, res) => {
   }
 }
 
-// Product
-// CreateProduct post
-// UpdateProduct put
-// getProduct get
-// getProductByUserId
+exports.searchProducts = async (req, res) => {
+  const query = req.query.query;
+  // console.log(query);
+  try {
+    if (!query) {
+      return res.status(400).json({ message: "Query parameter is required" });
+    }
+    const products = await Product.find({ name: new RegExp(query, 'i') });
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).send({ message: "Error occurred during search." });
+  }
+}

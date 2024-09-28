@@ -40,19 +40,33 @@ export const signupUser = createAsyncThunk(
     }
 );
 
-// Action for user signout
+// Async thunk  for user signout
 export const signoutUser = createAsyncThunk(
     "user/signout",
     async (_, { rejectWithValue }) => {
         try {
             await axios.post(`${backendURL}/api/users/signout`);
             localStorage.removeItem('userInfo');
+            localStorage.removeItem('token');
 
             dispatch({
                 type: 'user/signout',
               });
 
         } catch (error) {
+            return rejectWithValue(error.response.data.message);
+        }
+    }
+);
+
+// Async thunk for password reset
+export const passwordReset = createAsyncThunk(
+    "user/passwordReset", 
+    async (email, {rejectWithValue}) => {
+        try{
+            const response = await axios.post(`${backendURL}/api/users/updatePassword`, {email});
+            return response.data.message;
+        } catch(error) {
             return rejectWithValue(error.response.data.message);
         }
     }
@@ -66,6 +80,7 @@ const usersSlice = createSlice({
         loading: false,
         error: null,
         success: false, // for monitoring the registration process
+        resetMessage: "",
     },
     reducers: {
         setUserInfo: (state, action) => {
@@ -113,7 +128,24 @@ const usersSlice = createSlice({
             .addCase(signoutUser.fulfilled, (state) => {
                 state.userInfo = null;
                 state.success = false;
+            })
+
+            // Handle passwordReset
+            .addCase(passwordReset.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(passwordReset.fulfilled, (state, action) => {
+                state.loading = false;
+                state.resetMessage = action.payload;
+                state.error = null;
+                state.success = true;
+            })
+            .addCase(passwordReset.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
             });
+            
     },
 });
 

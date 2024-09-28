@@ -198,25 +198,25 @@ Example of a Product document:
 1. **Frontend**
 
    - Media queries (responsive design)
-   - Error handling
+   - Error handling （done）
    - Image preview/upload
    - Pagination
 
 2. **Authentication**
 
    - Sign-up page (auto-check)
-   - Change password page
-   - JWT (authentication)
+   - Update password page
+   - JWT (authentication) （done）
    - SendGrid API (email verification)
 
 3. **Product Management**
 
-   - Add product button
+   - Add product button (done)
 
 4. **Shopping Features**
 
-   - Search
-   - Cart
+   - Search (done)
+   - Cart （done）
 
 5. **Payment Integration**
 

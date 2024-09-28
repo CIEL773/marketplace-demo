@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const backendURL = 'http://localhost:4000'
 
 // Fetch all products
 export const fetchProducts = createAsyncThunk(
   "product/fetchProducts",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:4000/api/products");
+      const response = await axios.get(`${backendURL}/api/products`);
       return response.data;
       // console.log(response.data);
     } catch (error) {
@@ -20,7 +21,7 @@ export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/products/getProduct/${id}`);
+      const response = await axios.get(`${backendURL}/api/products/getProduct/${id}`);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -38,10 +39,10 @@ export const createProduct = createAsyncThunk(
       // include the token in the product data
       const payload = {
         ...productData,
-        token:token
+        token: token
       }
 
-      const response = await axios.post("http://localhost:4000/api/products/createProduct", payload,
+      const response = await axios.post(`${backendURL}/api/products/createProduct`, payload,
         {
           headers: {
             Authorization: `Bearer ${token}`, // If you need to send the token in the headers
@@ -61,7 +62,7 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, productData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/products/updateProduct/${id}`, productData);
+      const response = await axios.put(`${backendURL}/api/products/updateProduct/${id}`, productData);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -69,16 +70,39 @@ export const updateProduct = createAsyncThunk(
   }
 );
 
+export const searchProducts = createAsyncThunk(
+  "product/searchProducts",
+  async (query, { rejectWithValue }) => {
+    try {
+      query = query.query;
+
+      const response = await axios.get(`${backendURL}/api/products/search?query=${query}`);
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  });
+
 const initialState = {
   products: [],
+  // product: null,
   loading: false,
   error: null,
+  addedSuccess: false,  // Added success state
+  // searchResults: [], // Add searchResults to handle search separately
+  // searchLoading: false, // Loading indicator for search
+  // searchError: null,    // Error for search
 };
 
-const productSlice = createSlice({
+const productsSlice = createSlice({
   name: "product",
   initialState,
-  reducers: {},
+  reducers: {
+    resetAddedSuccess(state) {
+      state.addedSuccess = false;  // Action to reset success state
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Handle fetchProducts
@@ -113,14 +137,17 @@ const productSlice = createSlice({
       .addCase(createProduct.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.addedSuccess = false;
       })
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.products.push(action.payload); // Add the newly created product to the list
+        state.addedSuccess = true;  // Set success to true when product is successfully added
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.addedSuccess = false;
       })
 
       // Handle updateProduct
@@ -139,8 +166,25 @@ const productSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+
+      // Handle searchProducts
+      .addCase(searchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(searchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(searchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export default productSlice.reducer;
+
+export const { resetAddedSuccess } = productsSlice.actions;
+
+export default productsSlice.reducer;

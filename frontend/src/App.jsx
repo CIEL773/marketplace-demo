@@ -9,6 +9,8 @@ import UpdateProfilePage from "./pages/UpdateProfilePage";
 import ProductList from "./components/ProductList";
 import ProductDetail from "./components/ProductDetail";
 import AddProductForm from "./components/AddProductForm";
+import SearchResults from "./components/SearchResults";
+import ErrorPage from "./pages/ErrorPage";
 
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./features/usersSlice";
@@ -35,6 +37,8 @@ function App() {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/update" element={<UpdateProfilePage />} />
           <Route path="/addproduct" element={<AddProductForm />} />
+          <Route path="/search" element={<SearchResults />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
       <Footer />

@@ -100,6 +100,10 @@ exports.updateCart = async (req, res) => {
     const userId = req.user.id;
     const updatedItem = req.body; // {productId, quantity}
 
+    if (!updatedItem.productId || !updatedItem.quantity) {
+      return res.status(400).json({ message: "Product ID and quantity are required" });
+    }
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
@@ -141,18 +145,3 @@ exports.getCart = async (req, res) => {
     res.status(500).json({ message: err });
   }
 };
-
-// {
-//   "cartItems": [
-//     {
-//       "_id": "product1",
-//       "productId": "prod1",
-//       "quantity": 2
-//     },
-//     {
-//       "_id": "product2",
-//       "productId": "prod2",
-//       "quantity": 1
-//     }
-//   ]
-// }

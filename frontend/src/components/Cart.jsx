@@ -9,6 +9,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCart, updateCart } from "../features/cartSlice";
 import { fetchProductById } from "../features/productsSlice";
 import CartItem from "./CartItem";
+// import salesTax from "sales-tax";
+
+// // Set tax origin country to the US
+// salesTax.setTaxOriginCountry('US');
 
 function Cart() {
   // handle offcanvas status
@@ -22,7 +26,7 @@ function Cart() {
   const { cartItems, loading, error } = useSelector((state) => state.cart);
 
   const [fetchedProducts, setFetchedProducts] = useState([]);
-  const { products } = useSelector((state) => state.product);
+  // const { products } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getCart()); // Fetch the cart when the component mounts
@@ -31,7 +35,7 @@ function Cart() {
   // fetch product details based on cartItems
   useEffect(() => {
     const fetchProducts = async () => {
-      if (cartItems.length > 0) {
+      if (Array.isArray(cartItems) && cartItems.length > 0) {
         try {
           const productFetchPromises = cartItems.map((item) => {
             // Dispatch fetchProductById for each productId
@@ -59,27 +63,39 @@ function Cart() {
 
   // Handle increasing the quantity (+1)
   const handleIncreaseQuantity = (product) => {
-    const updatedCart = fetchedProducts.map((item) =>
-      item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
-    );
-    // console.log("updatedCart", updatedCart);
-    dispatch(updateCart(updatedCart));
+    const updatedItem = {
+      productId: product._id,
+      quantity: product.quantity + 1,
+    };
+    dispatch(updateCart(updatedItem));
   };
 
   // Handle decreasing the quantity (-1)
   const handleDecreaseQuantity = (product) => {
-    // const updatedCart = fetchedProducts.map((item) =>
-    //   item._id === product._id && item.quantity > 1
-    //     ? { ...item, quantity: item.quantity - 1 }
-    //     : item
-    // );
-    // dispatch(updateCart(updatedCart));
+    if (product.quantity > 1) {
+      const updatedItem = {
+        productId: product._id,
+        quantity: product.quantity - 1,
+      };
+      dispatch(updateCart(updatedItem));
+    }
   };
 
-  console.log("cartItems", cartItems);
-  console.log("cartItems", typeof cartItems);
-  console.log("Is cartItems an array?", Array.isArray(cartItems));
-  console.log("fetchedProducts", fetchedProducts);
+  // handle total price
+  // async function calculateTax(zipCode) {
+  //   const rate = await salesTax.getSalesTax('US', zipCode);
+  //   console.log(`Tax rate for ${zipCode}: ${rate}`);
+  // }
+  // calculateTax('90210'); 
+
+  const totalPrice = fetchedProducts.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+
+  // console.log("cartItems", cartItems);
+  // console.log("cartItems", typeof cartItems);
+  // console.log("Is cartItems an array?", Array.isArray(cartItems));
+  // console.log("fetchedProducts", fetchedProducts);
 
   return (
     <>
@@ -112,6 +128,9 @@ function Cart() {
               ))}
             </ul>
           )}
+          <div className="text-center">
+            <h3> Total Price: ${totalPrice.toFixed(2)}</h3>
+          </div>
         </Offcanvas.Body>
       </Offcanvas>
     </>

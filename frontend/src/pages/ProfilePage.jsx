@@ -13,7 +13,7 @@ const ProfilePage = () => {
     }
   }, [userInfo, navigate]);
 
-  console.log("Profile page res: userInfo:", userInfo);
+  // console.log("Profile page res: userInfo:", userInfo);
 
   return (
     <div className="container mt-5">

@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 // import "bootstrap/dist/css/bootstrap.min.css";
-import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { updateCart } from "../features/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -9,14 +11,26 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+
+  const dispatch = useDispatch();
+
+  const onAddToCart = (product) => {
+    const cartData = {
+      productId: product._id,
+      quantity: 1,
+    };
+    dispatch(updateCart(cartData));
+  };
+
   // Get product by productId
   useEffect(() => {
-    axios.get(`http://localhost:4000/api/products/getProduct/${id}`)
-      .then(response => {
+    axios
+      .get(`http://localhost:4000/api/products/getProduct/${id}`)
+      .then((response) => {
         setProduct(response.data);
         setLoading(false);
       })
-      .catch(err => {
+      .catch((err) => {
         setError(err.message);
         setLoading(false);
       });
@@ -54,17 +68,30 @@ const ProductDetail = () => {
         <h1 className="display-5 fw-bold text-body-emphasis lh-1 mb-3">
           {product.name}
         </h1>
-        <img src={product.image || 'https://picsum.photos/350'} alt={product.name} className="img-fluid mb-3" />
-        <p><strong>Price:</strong> ${product.price}</p>
-        <p className="badge bg-danger bg-opacity-10 text-danger border-none border-danger px-2 py-2 fs-6 fw-normal">{product.stock === 0 ? "Out of stock" : <>The Last {product.stock}</>}</p>
-        <p className="lead">
-          {product.description}
+        <img
+          src={product.image || "https://picsum.photos/350"}
+          alt={product.name}
+          className="img-fluid mb-3"
+        />
+        <p>
+          <strong>Price:</strong> ${product.price}
         </p>
+        <p className="badge bg-danger bg-opacity-10 text-danger border-none border-danger px-2 py-2 fs-6 fw-normal">
+          {product.stock === 0 ? "Out of stock" : <>The Last {product.stock}</>}
+        </p>
+        <p className="lead">{product.description}</p>
         <div className="d-grid gap-2 d-md-flex justify-content-md-start">
-          <button type="button" className="btn btn-primary btn-lg px-4 me-md-2">
+          <button
+            type="button"
+            className="btn btn-primary btn-lg px-4 me-md-2"
+            onClick={() => onAddToCart(product)}
+          >
             Add to cart
           </button>
-          <button type="button" className="btn btn-outline-secondary btn-lg px-4">
+          <button
+            type="button"
+            className="btn btn-outline-secondary btn-lg px-4"
+          >
             Edit
           </button>
         </div>
