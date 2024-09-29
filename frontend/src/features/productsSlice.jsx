@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const backendURL = 'http://localhost:4000'
+const backendURL = "http://localhost:4000";
 
 // Fetch all products
 export const fetchProducts = createAsyncThunk(
@@ -21,7 +21,9 @@ export const fetchProductById = createAsyncThunk(
   "product/fetchProductById",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${backendURL}/api/products/getProduct/${id}`);
+      const response = await axios.get(
+        `${backendURL}/api/products/getProduct/${id}`
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -39,10 +41,12 @@ export const createProduct = createAsyncThunk(
       // include the token in the product data
       const payload = {
         ...productData,
-        token: token
-      }
+        token: token,
+      };
 
-      const response = await axios.post(`${backendURL}/api/products/createProduct`, payload,
+      const response = await axios.post(
+        `${backendURL}/api/products/createProduct`,
+        payload,
         {
           headers: {
             Authorization: `Bearer ${token}`, // If you need to send the token in the headers
@@ -62,7 +66,10 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, productData }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${backendURL}/api/products/updateProduct/${id}`, productData);
+      const response = await axios.put(
+        `${backendURL}/api/products/updateProduct/${id}`,
+        productData
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -76,20 +83,23 @@ export const searchProducts = createAsyncThunk(
     try {
       query = query.query;
 
-      const response = await axios.get(`${backendURL}/api/products/search?query=${query}`);
+      const response = await axios.get(
+        `${backendURL}/api/products/search?query=${query}`
+      );
       console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
-  });
+  }
+);
 
 const initialState = {
   products: [],
   // product: null,
   loading: false,
   error: null,
-  addedSuccess: false,  // Added success state
+  addedSuccess: false, // Added success state
   // searchResults: [], // Add searchResults to handle search separately
   // searchLoading: false, // Loading indicator for search
   // searchError: null,    // Error for search
@@ -100,7 +110,7 @@ const productsSlice = createSlice({
   initialState,
   reducers: {
     resetAddedSuccess(state) {
-      state.addedSuccess = false;  // Action to reset success state
+      state.addedSuccess = false; // Action to reset success state
     },
   },
   extraReducers: (builder) => {
@@ -142,7 +152,7 @@ const productsSlice = createSlice({
       .addCase(createProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.products.push(action.payload); // Add the newly created product to the list
-        state.addedSuccess = true;  // Set success to true when product is successfully added
+        state.addedSuccess = true; // Set success to true when product is successfully added
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;
@@ -158,7 +168,9 @@ const productsSlice = createSlice({
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
         // Find the updated product in the products array and update it
-        const index = state.products.findIndex(product => product._id === action.payload._id);
+        const index = state.products.findIndex(
+          (product) => product._id === action.payload._id
+        );
         if (index !== -1) {
           state.products[index] = action.payload;
         }
@@ -176,6 +188,7 @@ const productsSlice = createSlice({
       .addCase(searchProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.products = action.payload;
+        state.addedSuccess = true;
       })
       .addCase(searchProducts.rejected, (state, action) => {
         state.loading = false;
@@ -183,7 +196,6 @@ const productsSlice = createSlice({
       });
   },
 });
-
 
 export const { resetAddedSuccess } = productsSlice.actions;
 
