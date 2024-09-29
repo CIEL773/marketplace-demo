@@ -8,6 +8,7 @@ const ProductItem = ({ product }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.cart);
+  const { userInfo } = useSelector((state) => state.user);
 
   const handleViewDetails = () => {
     navigate(`/products/${product._id}`);
@@ -19,6 +20,10 @@ const ProductItem = ({ product }) => {
       quantity: 1,
     };
     dispatch(updateCart(cartData));
+  };
+
+  const onEdit = () => {
+    navigate(`/editproducts/${product._id}`);
   };
 
   return (
@@ -41,13 +46,15 @@ const ProductItem = ({ product }) => {
           >
             Add
           </Button>
-          <Button
-            className="w-50"
-            variant="light"
-            onClick={() => onEdit(product)}
-          >
-            Edit
-          </Button>
+          {userInfo.role === "vendor" && product.vendor === userInfo.id && (
+            <Button
+              className="w-50"
+              variant="light"
+              onClick={() => onEdit(product)}
+            >
+              Edit
+            </Button>
+          )}
         </div>
       </Card.Body>
     </Card>

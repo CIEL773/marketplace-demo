@@ -8,7 +8,8 @@ import ProfilePage from "./pages/ProfilePage";
 import UpdateProfilePage from "./pages/UpdateProfilePage";
 import ProductList from "./components/ProductList";
 import ProductDetail from "./components/ProductDetail";
-import AddProductForm from "./components/AddProductForm";
+import AddProductPage from "./pages/AddProductPage";
+import EditProductPage from "./pages/EditProductPage";
 import SearchResults from "./components/SearchResults";
 import ErrorPage from "./pages/ErrorPage";
 
@@ -36,8 +37,9 @@ function App() {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/update" element={<UpdateProfilePage />} />
-          <Route path="/addproduct" element={<AddProductForm />} />
+          <Route path="/addproduct" element={<AddProductPage />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/editproduct/:id" component={<EditProductPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>
