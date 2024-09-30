@@ -13,6 +13,7 @@ const EditProductForm = ({ product }) => {
   const { loading, error, addedSuccess } = useSelector(
     (state) => state.product
   );
+  const { userInfo } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
     name: product.name,
@@ -27,17 +28,30 @@ const EditProductForm = ({ product }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // console.log("origin data", formData);
     setFormData({
       ...formData,
       [name]: value,
     });
+    // console.log("new data", formData);
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
     // Dispatch the action to update the product
-    dispatch(updateProduct({ id: product.id, ...formData }));
+    dispatch(
+      updateProduct({
+        id: product._id,
+        productData: { vendor: userInfo.id, ...formData },
+      })
+    );
+    // console.log("new data", {
+    //   id: product._id,
+    //   vendor: userInfo.id,
+    //   ...formData,
+    // });
+    // console.log("addedSuccess", addedSuccess);
 
     // Reset form fields after submission (if desired)
   };
@@ -48,7 +62,7 @@ const EditProductForm = ({ product }) => {
       // Show the success alert when the product is updated
       setShowAlert(true);
 
-      // Hide the alert after 3 seconds
+      // Hide the alert after 2 seconds
       setTimeout(() => {
         setShowAlert(false);
         dispatch(resetAddedSuccess()); // Reset success state in Redux

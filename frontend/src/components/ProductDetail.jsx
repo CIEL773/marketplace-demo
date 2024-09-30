@@ -28,7 +28,7 @@ const ProductDetail = () => {
   // handle edit
   const onEdit = () => {
     navigate(`/editproduct/${product._id}`);
-    console.log("product", product);
+    // console.log("product", product);
   };
 
   // Get product by productId
@@ -96,16 +96,18 @@ const ProductDetail = () => {
               >
                 Add to cart
               </Button>
-              {userInfo.role === "vendor" && product.vendor === userInfo.id && (
-                <Button
-                  variant="outline-secondary"
-                  size="lg"
-                  className="px-4"
-                  onClick={() => onEdit(product)}
-                >
-                  Edit
-                </Button>
-              )}
+              {userInfo &&
+                userInfo.role === "vendor" &&
+                product.vendor === userInfo.id && (
+                  <Button
+                    variant="outline-secondary"
+                    size="lg"
+                    className="px-4"
+                    onClick={() => onEdit(product)}
+                  >
+                    Edit
+                  </Button>
+                )}
             </div>
           </Col>
         </Row>

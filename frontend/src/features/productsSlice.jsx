@@ -66,10 +66,23 @@ export const updateProduct = createAsyncThunk(
   "product/updateProduct",
   async ({ id, productData }, { rejectWithValue }) => {
     try {
+      const token = localStorage.getItem("token"); // get token
+      // include the token in the product data
+      const payload = {
+        ...productData,
+        token: token,
+      };
       const response = await axios.put(
         `${backendURL}/api/products/updateProduct/${id}`,
-        productData
+        payload,
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // If you need to send the token in the headers
+          },
+        }
       );
+      // console.log("payload", payload);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -167,6 +180,7 @@ const productsSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
+        state.addedSuccess = true;
         // Find the updated product in the products array and update it
         const index = state.products.findIndex(
           (product) => product._id === action.payload._id
@@ -178,6 +192,7 @@ const productsSlice = createSlice({
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        state.addedSuccess = false;
       })
 
       // Handle searchProducts
