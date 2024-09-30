@@ -100,7 +100,7 @@ exports.updateCart = async (req, res) => {
     const userId = req.user.id;
     const updatedItem = req.body; // {productId, quantity}
 
-    if (!updatedItem.productId || !updatedItem.quantity) {
+    if (!updatedItem.productId || typeof updatedItem.quantity !== 'number') {
       return res.status(400).json({ message: "Product ID and quantity are required" });
     }
 
@@ -113,9 +113,12 @@ exports.updateCart = async (req, res) => {
     const updatedProductIndex = user.cart.findIndex((cartItem) => {
       return cartItem.productId.toString() === updatedItem.productId.toString();
     });
-
+    // Delete product if quantity is 0
+    if (updatedProductIndex > -1 && updatedItem.quantity <= 0) {
+      user.cart.splice(updatedProductIndex, 1);
+    }
     // Update quantity
-    if (updatedProductIndex > -1) {
+    else if (updatedProductIndex > -1) {
       user.cart[updatedProductIndex].quantity = updatedItem.quantity;
     }
     // Add new product
@@ -125,6 +128,8 @@ exports.updateCart = async (req, res) => {
         quantity: updatedItem.quantity,
       });
     }
+
+
     await user.save();
     res.status(200).json({ cart: user.cart });
   } catch (err) {
