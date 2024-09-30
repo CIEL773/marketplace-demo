@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Badge from "react-bootstrap/Badge";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCart, updateCart } from "../features/cartSlice";
 import { fetchProductById } from "../features/productsSlice";
 import CartItem from "./CartItem";
-// import salesTax from "sales-tax";
+// import SalesTax from "sales-tax";
 
 // // Set tax origin country to the US
 // salesTax.setTaxOriginCountry('US');
@@ -81,12 +82,17 @@ function Cart() {
     }
   };
 
+  // handle total amount
+  const totalAmount = fetchedProducts.reduce((total, item) => {
+    return total + item.quantity;
+  }, 0);
+
   // handle total price
   // async function calculateTax(zipCode) {
   //   const rate = await salesTax.getSalesTax('US', zipCode);
   //   console.log(`Tax rate for ${zipCode}: ${rate}`);
   // }
-  // calculateTax('90210'); 
+  // calculateTax('90210');
 
   const totalPrice = fetchedProducts.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -99,8 +105,9 @@ function Cart() {
 
   return (
     <>
-      <Button variant="outline-primary" onClick={handleShow}>
+      <Button variant="link" onClick={handleShow}>
         <i className="fas fa-shopping-cart fa-lg"></i>
+        <Badge bg="danger">{totalAmount}</Badge>
       </Button>
 
       <Offcanvas show={show} onHide={handleClose} placement="end" scroll="true">
