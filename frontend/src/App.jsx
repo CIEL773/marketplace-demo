@@ -12,6 +12,8 @@ import AddProductPage from "./pages/AddProductPage";
 import EditProductPage from "./pages/EditProductPage";
 import SearchResults from "./components/SearchResults";
 import ErrorPage from "./pages/ErrorPage";
+import UpdatePasswordPage from "./pages/UpdatePasswordPage";
+import ResetSuccessPage from "./pages/ResetSuccessPage";
 
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./features/usersSlice";
@@ -39,8 +41,8 @@ function App() {
           <Route path="/profile/update" element={<UpdateProfilePage />} />
           <Route path="/addproduct" element={<AddProductPage />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/editproduct/:id" element={<EditProductPage />} />
           <Route path="*" element={<ErrorPage />} />
+
         </Routes>
       </main>
       <Footer />
