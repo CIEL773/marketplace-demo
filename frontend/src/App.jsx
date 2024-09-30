@@ -39,7 +39,7 @@ function App() {
           <Route path="/profile/update" element={<UpdateProfilePage />} />
           <Route path="/addproduct" element={<AddProductPage />} />
           <Route path="/search" element={<SearchResults />} />
-          <Route path="/editproduct/:id" component={<EditProductPage />} />
+          <Route path="/editproduct/:id" element={<EditProductPage />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </main>

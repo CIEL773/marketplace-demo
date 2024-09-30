@@ -23,15 +23,17 @@ const ProductItem = ({ product }) => {
   };
 
   const onEdit = () => {
-    navigate(`/editproducts/${product._id}`);
+    navigate(`/editproduct/${product._id}`);
+    // console.log("product", product);
   };
 
   return (
-    <Card className="mb-3 shadow-sm" onClick={handleViewDetails}>
+    <Card className="mb-3 shadow-sm">
       <Card.Img
         variant="top"
         src={product.image || "https://picsum.photos/150"}
         alt={product.name}
+        onClick={handleViewDetails}
       />
       <Card.Body>
         <Card.Title className="text-muted">{product.name}</Card.Title>
@@ -46,15 +48,17 @@ const ProductItem = ({ product }) => {
           >
             Add
           </Button>
-          {userInfo.role === "vendor" && product.vendor === userInfo.id && (
-            <Button
-              className="w-50"
-              variant="light"
-              onClick={() => onEdit(product)}
-            >
-              Edit
-            </Button>
-          )}
+          {userInfo &&
+            userInfo.role === "vendor" &&
+            product.vendor === userInfo.id && (
+              <Button
+                className="w-50"
+                variant="light"
+                onClick={() => onEdit(product)}
+              >
+                Edit
+              </Button>
+            )}
         </div>
       </Card.Body>
     </Card>
