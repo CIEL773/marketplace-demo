@@ -6,7 +6,7 @@ import { useSelector } from "react-redux"; // Import to access the Redux store
 const EditProductPage = () => {
   const { id } = useParams(); // Get the product ID from the URL
   const product = useSelector((state) =>
-    state.product.products.find((p) => p.id === id)
+    state.product.products.find((p) => p._id === id)
   ); // Get the product from Redux store based on ID
 
   if (!product) {
