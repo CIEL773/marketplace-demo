@@ -11,3 +11,5 @@ const ResetSuccessPage = () => {
     </div>
   );
 };
+
+export default ResetSuccessPage;

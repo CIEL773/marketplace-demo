@@ -16,7 +16,7 @@ const UpdatePasswordPage = () => {
     dispatch(passwordReset(data));
     setEmailSent(true);
     setTimeout(() => {
-      navigate("/reset-success");
+      navigate("/resetsuccess");
     }, 2000);
   }
 
@@ -52,3 +52,5 @@ const UpdatePasswordPage = () => {
     </div>
   );
 };
+
+export default UpdatePasswordPage;
