@@ -21,18 +21,27 @@ const Header = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const debouncedSearch = useMemo(() =>
-    debounce((query) => {
-      if (query.trim() !== "") {
-        dispatch(searchProducts({ query }));
-        navigate(`/search?query=${query}`);
-      }
-    }, 500), [dispatch, navigate]);
+  // Debounced search for products, but without navigation
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((query) => {
+        if (query.trim() !== "") {
+          dispatch(searchProducts({ query }));
+        }
+      }, 500),
+    [dispatch]
+  );
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
     debouncedSearch(value);
+  };
+
+  const handleSearchClick = () => {
+    if (searchQuery.trim() !== "") {
+      navigate(`/search?query=${searchQuery}`);
+    }
   };
 
   const handleSignout = async () => {
@@ -71,7 +80,7 @@ const Header = () => {
             <Button
               variant="outline-primary"
               type="submit"
-              onClick={() => debouncedSearch(searchQuery)}
+              onClick={handleSearchClick}
             >
               Search
             </Button>
