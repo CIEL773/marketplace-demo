@@ -12,6 +12,7 @@ router.get("/getUser", auth, userController.getUser);
 router.patch("/updatePassword", auth, userController.updatePassword);
 router.patch("/updateCart", auth, userController.updateCart);
 router.get("/getCart", auth, userController.getCart);
+router.post("/resetPassword", userController.resetPassword);
 
 router.post("/signout", userController.signout);
 module.exports = router;
