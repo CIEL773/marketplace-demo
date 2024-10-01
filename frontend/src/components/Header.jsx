@@ -21,13 +21,16 @@ const Header = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const debouncedSearch = useMemo(() =>
-    debounce((query) => {
-      if (query.trim() !== "") {
-        dispatch(searchProducts({ query }));
-        navigate(`/search?query=${query}`);
-      }
-    }, 500), [dispatch, navigate]);
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((query) => {
+        if (query.trim() !== "") {
+          dispatch(searchProducts({ query }));
+          navigate(`/search?query=${query}`);
+        }
+      }, 500),
+    [dispatch, navigate]
+  );
 
   const handleInputChange = (e) => {
     const value = e.target.value;
@@ -59,7 +62,7 @@ const Header = () => {
         </Col>
 
         {/* Search Bar */}
-        <Col xs={12} md={6} lg={4} className="mb-2 mb-md-0">
+        <Col xs={12} md={4} lg={4} className="mb-2 mb-md-0">
           <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
             <Form.Control
               type="text"
@@ -79,7 +82,7 @@ const Header = () => {
         </Col>
 
         {/* User Profile / Auth Buttons */}
-        <Col xs={12} md={3} lg={4} className="text-center text-md-end">
+        <Col xs={12} md={5} lg={4} className="text-center text-md-end">
           {userInfo ? (
             <>
               <Link to="/profile" className="me-2">
