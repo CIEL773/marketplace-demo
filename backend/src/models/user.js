@@ -11,7 +11,11 @@ const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   role: { type: String, enum: ["user", "vendor"], default: "user" },
   password: { type: String, required: true },
-  address: { type: String },
+  address: {
+    street: { type: String },
+    city: { type: String },
+    state: { type: String },
+  },  
   cart: { type: [cartSchema], default: [] },
   productList: {
     type: [{ type: Schema.Types.ObjectId, ref: "product" }],

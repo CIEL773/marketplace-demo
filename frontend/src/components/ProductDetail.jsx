@@ -69,7 +69,7 @@ const ProductDetail = () => {
               {product.name}
             </h1>
             <img
-              src={product.image || "https://picsum.photos/350"}
+              src={product.imageUrl || "https://picsum.photos/350"}
               alt={product.name}
               className="img-fluid mb-3"
             />

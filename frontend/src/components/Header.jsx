@@ -47,10 +47,26 @@ const Header = () => {
   const handleSignout = async () => {
     try {
       dispatch(signoutUser());
+      window.location.reload();
+      navigate("/");
     } catch (error) {
       console.error("Signout failed:", error);
     }
   };
+
+  // useEffect(() => {
+  //   if (userInfo === null) {
+  //     // Only redirect when the userInfo becomes null (user signed out)
+  //     navigate("/");
+  //   }
+  // }, [userInfo, navigate]);
+  
+
+  
+
+//   useEffect(() => {
+//     dispatch(signoutUser());
+// }, [dispatch]);
 
   return (
     <Container fluid className="py-2 border-bottom bg-light fixed-top">
@@ -68,7 +84,7 @@ const Header = () => {
         </Col>
 
         {/* Search Bar */}
-        <Col xs={12} md={6} lg={4} className="mb-2 mb-md-0">
+        <Col xs={12} md={4} lg={4} className="mb-2 mb-md-0">
           <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
             <Form.Control
               type="text"
@@ -81,6 +97,7 @@ const Header = () => {
               variant="outline-primary"
               type="submit"
               onClick={handleSearchClick}
+              disabled={signoutLoading}  // Disable button when signing out
             >
               Search
             </Button>
@@ -88,7 +105,7 @@ const Header = () => {
         </Col>
 
         {/* User Profile / Auth Buttons */}
-        <Col xs={12} md={3} lg={4} className="text-center text-md-end">
+        <Col xs={12} md={5} lg={4} className="text-center text-md-end">
           {userInfo ? (
             <>
               <Link to="/profile" className="me-2">

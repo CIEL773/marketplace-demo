@@ -14,6 +14,8 @@ import SearchResults from "./components/SearchResults";
 import ErrorPage from "./pages/ErrorPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResetSuccessPage from "./pages/ResetSuccessPage";
+import UpdateAddress from "./components/UpdateAddress";
+import UpdatePassword from "./components/UpdatePassword";
 
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./features/usersSlice";
@@ -44,6 +46,8 @@ function App() {
           <Route path="/editproduct/:id" element={<EditProductPage />} />
           <Route path="/resetpassword" element={<ResetPasswordPage />} />
           <Route path="/resetsuccess" element={<ResetSuccessPage />} />
+          <Route path="/updateaddress" element={<UpdateAddress />} />
+          <Route path="/updatepassword" element={<UpdatePassword />} />
           <Route path="*" element={<ErrorPage />} />
 
         </Routes>

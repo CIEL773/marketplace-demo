@@ -17,10 +17,23 @@ export const signinUser = createAsyncThunk(
             console.log("response.data: ", response.data);
 
             // Store user data in localStorage (adjust keys as needed)
+            // userInfo = {
+            //     ...userInfo,
+            //     token: action.payload.token,
+            //     address: action.payload.address,
+            //   };
             localStorage.setItem('token', response.data.token);
+            const { user, token } = response.data;
+
+            const userInfo = {
+                ...user,
+                token: token, // Add token to the userInfo
+                address: user.address || {}, // Optional: Add address if it exists
+              };
+
             localStorage.setItem("userInfo", JSON.stringify(response.data.user));  // Store user info
 
-            return response.data.user;
+            return userInfo;
         } catch (error) {
             return rejectWithValue(error.response.data.message);
         }
@@ -51,7 +64,7 @@ export const signoutUser = createAsyncThunk(
 
             dispatch({
                 type: 'user/signout',
-              });
+            });
 
         } catch (error) {
             return rejectWithValue(error.response.data.message);
@@ -61,16 +74,59 @@ export const signoutUser = createAsyncThunk(
 
 // Async thunk for password reset
 export const passwordReset = createAsyncThunk(
-    "user/passwordReset", 
-    async (email, {rejectWithValue}) => {
-        try{
-            const response = await axios.post(`${backendURL}/api/users/resetPassword`, {email});
+    "user/passwordReset",
+    async (email, { rejectWithValue }) => {
+        try {
+            const response = await axios.post(`${backendURL}/api/users/resetPassword`, { email });
             return response.data.message;
-        } catch(error) {
+        } catch (error) {
             return rejectWithValue(error.response.data.message);
         }
     }
 );
+
+// Update user address
+export const updateUserAddress = createAsyncThunk(
+    'user/updateUserAddress',
+    async ({address}, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+            console.log("Token in localStorage:", token);
+
+            const response = await axios.put(`${backendURL}/api/users/updateAddress`, address, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            return response.data.user;
+        } catch (error) {
+            return rejectWithValue(error.response.data.message);
+        }
+    }
+);
+
+//Update user password after login
+export const updateUserPassword = createAsyncThunk(
+    'user/updatePassword',
+    async ({ userId, password }, { rejectWithValue }) => {
+        try {
+            const token = localStorage.getItem('token');
+
+            const response = await axios.put(
+                `${backendURL}/api/users/updatePassword`, password,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            return response.data.user;
+        } catch (error) {
+            return rejectWithValue(error.response?.data?.message || "Failed to update password");
+        }
+    }
+);
+
 
 const usersSlice = createSlice({
     name: "user",
@@ -144,8 +200,15 @@ const usersSlice = createSlice({
             .addCase(passwordReset.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.payload;
+            })
+
+            .addCase(updateUserAddress.fulfilled, (state, action) => {
+                state.userInfo = {
+                  ...state.userInfo,
+                  address: action.payload.address,
+                };
+                localStorage.setItem('userInfo', JSON.stringify(state.userInfo));
             });
-            
     },
 });
 
