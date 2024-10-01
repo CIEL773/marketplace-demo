@@ -16,6 +16,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResetSuccessPage from "./pages/ResetSuccessPage";
 import UpdateAddress from "./components/UpdateAddress";
 import UpdatePassword from "./components/UpdatePassword";
+import Checkout from "./components/Checkout";
 
 import { useDispatch } from "react-redux";
 import { setUserInfo } from "./features/usersSlice";
@@ -48,6 +49,7 @@ function App() {
           <Route path="/resetsuccess" element={<ResetSuccessPage />} />
           <Route path="/updateaddress" element={<UpdateAddress />} />
           <Route path="/updatepassword" element={<UpdatePassword />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="*" element={<ErrorPage />} />
 
         </Routes>

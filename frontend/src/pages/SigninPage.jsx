@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from 'react-hook-form'
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../features/usersSlice";
 import { useNavigate, Link } from "react-router-dom";
@@ -62,6 +61,10 @@ const SigninPage = () => {
             {loading ? "Signing in..." : "Sign in"}
           </button>
             <div className="d-flex justify-content-center align-items-center mt-3">
+            <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
+          </div>
+
+          <div className="d-flex justify-content-center align-items-center mt-3">
             <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
           </div>
 

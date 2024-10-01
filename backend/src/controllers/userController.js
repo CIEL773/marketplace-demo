@@ -118,7 +118,6 @@ exports.updatePassword = async (req, res) => {
   try {
     const userId = req.user.id;
     const { password } = req.body;
-
     const hashedPassword = await bcrypt.hash(password, 12);
     const updatePassword = await User.findByIdAndUpdate(
       userId,
@@ -129,7 +128,7 @@ exports.updatePassword = async (req, res) => {
     if (!updatePassword) {
       return res.status(404).json({ message: "User not found" });
     }
-    await updatePassword.save();
+
     return res.status(200).json({ message: "success" });
   } catch (err) {
     console.error(err);
