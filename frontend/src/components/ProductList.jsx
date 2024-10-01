@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import ProductItem from './ProductItem';
 import { fetchProducts } from "../features/productsSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -7,10 +7,26 @@ import { useDispatch, useSelector } from "react-redux";
 const ProductList = () => {
     const dispatch = useDispatch();
     const { products, loading, error } = useSelector((state => state.product));
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage] = useState(6);
     useEffect(() => {
         dispatch(fetchProducts());
         // console.log("Dispatched fetchProducts action");
     }, [dispatch]);
+
+    // Calculate the indexes for the products to display
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(products.length / productsPerPage);
+
+    // Handle page change
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
 
     return (
         <div className="container">
@@ -19,12 +35,48 @@ const ProductList = () => {
             {error && <p>Error: {error}</p>}
 
             <div className="row">
-                {products.map((product) => (
+                {currentProducts.map((product) => (
                     <div key={product._id} className="col-md-4">
                         <ProductItem product={product} />
                     </div>
                 ))}
             </div>
+            
+            <div class="pagination-container mt-4 d-flex justify-content-center">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item">
+                            <button
+                                class="page-link"
+                                onClick={() => handlePageChange(currentPage - 1)}
+                                disabled={currentPage === 1}
+                            >
+                                «
+                            </button>
+                        </li>
+                        {[...Array(totalPages)].map((_, index) => (
+                            <li key={index + 1} class={`page-item ${index + 1 === currentPage ? 'active' : ''}`}>
+                                <button
+                                    class="page-link"
+                                    onClick="handlePageChange(index + 1)"
+                                >
+                                    {index + 1}
+                                </button>
+                            </li>
+                        ))}
+                        <li class="page-item">
+                            <button
+                                class="page-link"
+                                onClick={() => handlePageChange(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            >
+                                »
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
     );
 };

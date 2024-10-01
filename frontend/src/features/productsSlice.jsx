@@ -99,7 +99,7 @@ export const searchProducts = createAsyncThunk(
       const response = await axios.get(
         `${backendURL}/api/products/search?query=${query}`
       );
-      console.log(response.data);
+      // console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
