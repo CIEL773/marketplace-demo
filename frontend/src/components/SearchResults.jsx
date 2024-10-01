@@ -20,10 +20,8 @@ const SearchResults = () => {
     }
   }, [dispatch, query]);
 
-  console.log(query);
-  console.log(products);
-
-
+  // console.log(query);
+  // console.log(products);
 
   return (
     <div className="container">

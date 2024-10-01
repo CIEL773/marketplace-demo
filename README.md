@@ -197,10 +197,10 @@ Example of a Product document:
 
 1. **Frontend**
 
-   - Media queries (responsive design)
+   - Media queries (responsive design) （done0
    - Error handling （done）
-   - Image preview/upload
-   - Pagination
+   - Image preview/upload (done)
+   - Pagination (done)
 
 2. **Authentication**
 
