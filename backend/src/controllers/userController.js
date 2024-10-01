@@ -95,13 +95,54 @@ exports.updatePassword = async (req, res) => {
   }
 };
 
+// exports.updateCart = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+//     const updatedItem = req.body; // {productId, quantity}
+
+//     if (!updatedItem.productId || !updatedItem.quantity) {
+//       return res.status(400).json({ message: "Product ID and quantity are required" });
+//     }
+
+//     const user = await User.findById(userId);
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     // updatedProductIndex: index of the product in the cart
+//     const updatedProductIndex = user.cart.findIndex((cartItem) => {
+//       return cartItem.productId.toString() === updatedItem.productId.toString();
+//     });
+
+//     // Update quantity
+//     if (updatedProductIndex > -1) {
+//       user.cart[updatedProductIndex].quantity = updatedItem.quantity;
+//     }
+//     // Add new product
+//     else {
+//       user.cart.push({
+//         productId: updatedItem.productId,
+//         quantity: updatedItem.quantity,
+//       });
+//     }
+//     await user.save();
+//     res.status(200).json({ cart: user.cart });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message || "Server error" });
+//   }
+// };
+
 exports.updateCart = async (req, res) => {
+  console.log("updateCart route hit");
   try {
+    console.log("Updated item received from frontend:", req.body);
     const userId = req.user.id;
     const updatedItem = req.body; // {productId, quantity}
 
-    if (!updatedItem.productId || !updatedItem.quantity) {
-      return res.status(400).json({ message: "Product ID and quantity are required" });
+    if (!updatedItem.productId || typeof updatedItem.quantity !== "number") {
+      return res
+        .status(400)
+        .json({ message: "Product ID and quantity are needed" });
     }
 
     const user = await User.findById(userId);
@@ -113,9 +154,13 @@ exports.updateCart = async (req, res) => {
     const updatedProductIndex = user.cart.findIndex((cartItem) => {
       return cartItem.productId.toString() === updatedItem.productId.toString();
     });
-
+    // Delete product if quantity is 0
+    if (updatedProductIndex > -1 && updatedItem.quantity <= 0) {
+      user.cart.splice(updatedProductIndex, 1);
+      //  console.log("Product removed. Updated cart:", user.cart);
+    }
     // Update quantity
-    if (updatedProductIndex > -1) {
+    else if (updatedProductIndex > -1) {
       user.cart[updatedProductIndex].quantity = updatedItem.quantity;
     }
     // Add new product
@@ -125,6 +170,7 @@ exports.updateCart = async (req, res) => {
         quantity: updatedItem.quantity,
       });
     }
+
     await user.save();
     res.status(200).json({ cart: user.cart });
   } catch (err) {
