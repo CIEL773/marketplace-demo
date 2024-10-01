@@ -5,7 +5,16 @@ import { useSelector, useDispatch } from "react-redux";
 import { signoutUser } from "../features/usersSlice";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Cart from "./Cart";
-import { Container, Row, Col, Form, Button, Image } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Image,
+  Navbar,
+  Nav,
+} from "react-bootstrap";
 import { searchProducts } from "../features/productsSlice";
 import debounce from "lodash/debounce";
 
@@ -60,88 +69,112 @@ const Header = () => {
   //     navigate("/");
   //   }
   // }, [userInfo, navigate]);
-  
 
-  
-
-//   useEffect(() => {
-//     dispatch(signoutUser());
-// }, [dispatch]);
+  //   useEffect(() => {
+  //     dispatch(signoutUser());
+  // }, [dispatch]);
 
   return (
-    <Container fluid className="py-2 border-bottom bg-light fixed-top">
-      <Row className="align-items-center">
+    <Navbar expand="lg" className="bg-light fixed-top border-bottom">
+      <Container fluid>
         {/* Management Logo */}
-        <Col
-          xs={12}
-          md={3}
-          lg={4}
-          className="mb-2 mb-md-0 text-center text-md-start"
-        >
-          <Link to="/" className="text-decoration-none text-body-secondary">
-            <h3>Management</h3>
-          </Link>
-        </Col>
+        <Navbar.Brand as={Link} to="/" className="text-body-secondary col-lg-4">
+          <h3>Management</h3>
+        </Navbar.Brand>
 
-        {/* Search Bar */}
-        <Col xs={12} md={4} lg={4} className="mb-2 mb-md-0">
-          <Form className="d-flex" onSubmit={(e) => e.preventDefault()}>
-            <Form.Control
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={handleInputChange}
-              className="me-2"
-            />
-            <Button
-              variant="outline-primary"
-              type="submit"
-              onClick={handleSearchClick}
-              disabled={signoutLoading}  // Disable button when signing out
-            >
-              Search
-            </Button>
-          </Form>
-        </Col>
+        {/* Toggle Button for Small Screens */}
+        <Navbar.Toggle
+          aria-controls="responsive-navbar-nav"
+          className="ms-auto"
+        />
 
-        {/* User Profile / Auth Buttons */}
-        <Col xs={12} md={5} lg={4} className="text-center text-md-end">
-          {userInfo ? (
-            <>
-              <Link to="/profile" className="me-2">
-                <Image
-                  src={userInfo.avatar || "https://via.placeholder.com/40"}
-                  alt="User Avatar"
-                  roundedCircle
-                  style={{ width: "40px", height: "40px" }}
-                />
-              </Link>
-              <Button
-                variant="outline-primary"
-                className="me-2"
-                onClick={handleSignout}
+        <Navbar.Collapse id="responsive-navbar-nav">
+          <Row className="w-100">
+            <Col xs={12} sm={8} md={6} lg={6} className="mb-2 mb-md-0">
+              {/* Search Bar for larger screens */}
+              <Form
+                className="d-none d-lg-flex"
+                onSubmit={(e) => e.preventDefault()}
               >
-                Sign-out
-              </Button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">
-                <Button variant="outline-primary" className="me-2">
-                  Sign-in
+                <Form.Control
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                  className="me-2"
+                />
+                <Button
+                  variant="outline-primary"
+                  type="submit"
+                  onClick={handleSearchClick}
+                  disabled={signoutLoading} // Disable button when signing out
+                >
+                  Search
                 </Button>
-              </Link>
-              <Link to="/signup">
-                <Button variant="outline-primary" className="me-2">
-                  Sign-up
+
+              </Form>
+              {/* Search Bar for Small Screens */}
+              <Form className="d-lg-none" onSubmit={(e) => e.preventDefault()} >
+                <Form.Control
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={handleInputChange}
+                />
+                <Button
+                  variant="outline-primary"
+                  type="submit"
+                  onClick={handleSearchClick}
+                  disabled={signoutLoading} // Disable button when signing out
+                >
+                  Search
                 </Button>
-              </Link>
-            </>
-          )}
-          <Cart />
-        </Col>
-      </Row>
-    </Container>
+              </Form>
+            </Col>
+
+            {/* User Profile / Auth Buttons */}
+            <Col xs={12} sm={4} md={6} lg={6} className="text-center text-md-end">
+              {userInfo ? (
+                <>
+                  <Link to="/profile" className="me-2">
+                    <Image
+                      src={
+                        userInfo.avatar ||
+                        "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI="
+                      }
+                      alt="User Avatar"
+                      roundedCircle
+                      style={{ width: "45px", height: "45px" }}
+                    />
+                  </Link>
+                  <Button
+                    variant="outline-primary"
+                    className="me-2"
+                    onClick={handleSignout}
+                  >
+                    Sign-out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login">
+                    <Button variant="outline-primary" className="me-2">
+                      Sign-in
+                    </Button>
+                  </Link>
+                  <Link to="/signup">
+                    <Button variant="outline-primary" className="me-2">
+                      Sign-up
+                    </Button>
+                  </Link>
+                </>
+              )}
+              <Cart />
+            </Col>
+          </Row>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 

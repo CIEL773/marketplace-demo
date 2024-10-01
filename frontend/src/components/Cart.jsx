@@ -140,6 +140,10 @@ function Cart() {
     navigate("/updateaddress"); // Navigate to update profile page if no address
   };
 
+  const handleCheckoutClick = () => {
+    navigate("/checkout");
+  };
+
   return (
     <>
       <Button variant="link" onClick={() => setShow(true)}>
@@ -178,6 +182,9 @@ function Cart() {
                   <div>
                     <h4>State: {userInfo.address.state}</h4>
                     <h4>After Tax: ${totalPriceWithTax.toFixed(2)}</h4>
+                    <Button variant="primary" onClick={handleCheckoutClick}>
+                      Proceed to Checkout
+                    </Button>
                   </div>
                 ) : (
                   <div>

@@ -7,7 +7,7 @@ export const getCart = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      console.log("token in cartslice", token); // correct
+      // console.log("token in cartslice", token); // correct
       // const userInfo = localStorage.getItem("userInfo")
 
       const response = await axios.get(
@@ -18,7 +18,6 @@ export const getCart = createAsyncThunk(
           },
         }
       );
-      //        console.log(response.data);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

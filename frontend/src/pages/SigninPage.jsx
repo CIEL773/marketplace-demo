@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from 'react-hook-form'
-import "bootstrap/dist/css/bootstrap.min.css";
 import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../features/usersSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link} from "react-router-dom";
 
 
 const SigninPage = () => {
@@ -60,6 +59,10 @@ const SigninPage = () => {
           <button className="btn btn-primary w-100 py-2" type="submit" disabled={loading}>
             {loading ? "Signing in..." : "Sign in"}
           </button>
+
+          <div className="d-flex justify-content-center align-items-center mt-3">
+            <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
+          </div>
 
           {error && <p className="text-danger mt-3">{error}</p>}
         </form>

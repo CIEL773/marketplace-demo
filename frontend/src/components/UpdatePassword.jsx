@@ -19,8 +19,9 @@ const UpdatePassword = () => {
   }, [navigate, userInfo]);
 
   const submitForm = (data) => {
+    console.log(data)
     if (userInfo) {
-      dispatch(updateUserPassword({ userId: userInfo._id, password: data.password }));
+      dispatch(updateUserPassword({ password: data.password }));
       navigate("/");
     }
   };

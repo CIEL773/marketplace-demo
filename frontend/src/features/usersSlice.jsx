@@ -13,6 +13,7 @@ export const signinUser = createAsyncThunk(
     async (formData, { rejectWithValue }) => {
         try {
             const response = await axios.post(`${backendURL}/api/users/signin`, formData);
+
             console.log("response: ", response);
             console.log("response.data: ", response.data);
 
@@ -29,7 +30,7 @@ export const signinUser = createAsyncThunk(
                 ...user,
                 token: token, // Add token to the userInfo
                 address: user.address || {}, // Optional: Add address if it exists
-              };
+            };
 
             localStorage.setItem("userInfo", JSON.stringify(response.data.user));  // Store user info
 
@@ -88,7 +89,7 @@ export const passwordReset = createAsyncThunk(
 // Update user address
 export const updateUserAddress = createAsyncThunk(
     'user/updateUserAddress',
-    async ({address}, { rejectWithValue }) => {
+    async ({ address }, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem('token');
             console.log("Token in localStorage:", token);
@@ -108,18 +109,16 @@ export const updateUserAddress = createAsyncThunk(
 //Update user password after login
 export const updateUserPassword = createAsyncThunk(
     'user/updatePassword',
-    async ({ userId, password }, { rejectWithValue }) => {
+    async ({ password }, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem('token');
 
-            const response = await axios.put(
-                `${backendURL}/api/users/updatePassword`, password,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const response = await axios.patch(`${backendURL}/api/users/updatePassword`, { password }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log(response);
             return response.data.user;
         } catch (error) {
             return rejectWithValue(error.response?.data?.message || "Failed to update password");
@@ -171,7 +170,7 @@ const usersSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userInfo = action.payload;
+                // state.userInfo = action.payload;
                 state.error = null;
                 state.success = true;
             })
@@ -204,8 +203,8 @@ const usersSlice = createSlice({
 
             .addCase(updateUserAddress.fulfilled, (state, action) => {
                 state.userInfo = {
-                  ...state.userInfo,
-                  address: action.payload.address,
+                    ...state.userInfo,
+                    address: action.payload.address,
                 };
                 localStorage.setItem('userInfo', JSON.stringify(state.userInfo));
             });
