@@ -29,7 +29,7 @@ function App() {
     }
   }, [dispatch]);
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="d-flex flex-column min-vh-100 py-5">
       <Header />
       <main className="flex-fill">
         <Routes>

@@ -53,6 +53,7 @@ function Cart() {
             return { ...productDetails, quantity: cartItem.quantity };
           });
           setFetchedProducts(cartWithDetails); // Set the fetched product details
+          console.log("cartWithDetails", cartWithDetails);
         } catch (err) {
           console.error("Error fetching product details:", err);
         }
@@ -68,6 +69,7 @@ function Cart() {
       productId: product._id,
       quantity: product.quantity + 1,
     };
+    // console.log("Updated item:", updatedItem);
     dispatch(updateCart(updatedItem));
   };
 
@@ -78,6 +80,14 @@ function Cart() {
         productId: product._id,
         quantity: product.quantity - 1,
       };
+      // console.log("Updated item:", updatedItem);
+      dispatch(updateCart(updatedItem));
+    } else {
+      const updatedItem = {
+        productId: product._id,
+        quantity: 0,
+      };
+      // console.log("Updated item:", updatedItem);
       dispatch(updateCart(updatedItem));
     }
   };

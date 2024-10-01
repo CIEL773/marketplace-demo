@@ -40,9 +40,9 @@ const ProductItem = ({ product }) => {
         <Card.Text>
           <strong>${product.price}</strong>
         </Card.Text>
-        <div className="d-grid gap-2 d-md-flex justify-content-md-start">
+        <div className="d-grid gap-2 d-flex justify-content-md-start justify-content-center">
           <Button
-            className="w-50 me-2"
+            className="w-25 me-2"
             variant="primary"
             onClick={() => onAddToCart(product)}
           >
@@ -52,7 +52,7 @@ const ProductItem = ({ product }) => {
             userInfo.role === "vendor" &&
             product.vendor === userInfo.id && (
               <Button
-                className="w-50"
+                className="w-25"
                 variant="light"
                 onClick={() => onEdit(product)}
               >
