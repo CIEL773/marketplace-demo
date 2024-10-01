@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import Badge from "react-bootstrap/Badge";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +28,8 @@ function Cart() {
 
   const [fetchedProducts, setFetchedProducts] = useState([]);
   // const { products } = useSelector((state) => state.product);
+  const [selectedState, setSelectedState] = useState(""); // New state for selected location
+  const [taxRate, setTaxRate] = useState(0); // New state for tax rate
 
   useEffect(() => {
     dispatch(getCart()); // Fetch the cart when the component mounts
@@ -108,6 +110,25 @@ function Cart() {
     return total + item.price * item.quantity;
   }, 0);
 
+  // State tax rates
+  const stateTaxRates = {
+    CA: 0.0725, // California 7.25%
+    NY: 0.04, // New York 4%
+    TX: 0.0625, // Texas 6.25%
+    FL: 0.06, // Florida 6%
+    IL: 0.0625, // Illinois 6.25%
+    // Add more states as needed
+  };
+
+  // Handle state selection change
+  const handleStateChange = (event) => {
+    const selected = event.target.value;
+    setSelectedState(selected);
+    setTaxRate(stateTaxRates[selected] || 0); // Set tax rate based on selected state
+  };
+  // Calculate the total price after tax
+  const totalPriceWithTax = totalPrice * (1 + taxRate);
+
   // console.log("cartItems", cartItems);
   // console.log("cartItems", typeof cartItems);
   // console.log("Is cartItems an array?", Array.isArray(cartItems));
@@ -146,7 +167,25 @@ function Cart() {
             </ul>
           )}
           <div className="text-center">
-            <h3> Total Price: ${totalPrice.toFixed(2)}</h3>
+            <h4> Total Price: ${totalPrice.toFixed(2)}</h4>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Select your state for tax calculation:</Form.Label>
+              <Form.Select
+                aria-label="Select state"
+                onChange={handleStateChange}
+              >
+                <option value="">--Select State--</option>
+                <option value="CA">California</option>
+                <option value="NY">New York</option>
+                <option value="TX">Texas</option>
+                <option value="FL">Florida</option>
+                <option value="IL">Illinois</option>
+                {/* Add more states as options */}
+              </Form.Select>
+            </Form.Group>
+
+            <h4>After Tax: ${totalPriceWithTax.toFixed(2)}</h4>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
