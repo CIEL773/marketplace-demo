@@ -42,12 +42,12 @@ const ProductList = () => {
                 ))}
             </div>
             
-            <div class="pagination-container mt-4 d-flex justify-content-center">
+            <div className="pagination-container mt-4 d-flex justify-content-center">
                 <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item">
+                    <ul className="pagination">
+                        <li className="page-item">
                             <button
-                                class="page-link"
+                                className="page-link"
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 disabled={currentPage === 1}
                             >
@@ -55,18 +55,18 @@ const ProductList = () => {
                             </button>
                         </li>
                         {[...Array(totalPages)].map((_, index) => (
-                            <li key={index + 1} class={`page-item ${index + 1 === currentPage ? 'active' : ''}`}>
+                            <li key={index + 1} className={`page-item ${index + 1 === currentPage ? 'active' : ''}`}>
                                 <button
-                                    class="page-link"
-                                    onClick="handlePageChange(index + 1)"
+                                    className="page-link"
+                                    onClick={() => handlePageChange(index + 1)}
                                 >
                                     {index + 1}
                                 </button>
                             </li>
                         ))}
-                        <li class="page-item">
+                        <li className="page-item">
                             <button
-                                class="page-link"
+                                className="page-link"
                                 onClick={() => handlePageChange(currentPage + 1)}
                                 disabled={currentPage === totalPages}
                             >
