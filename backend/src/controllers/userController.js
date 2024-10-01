@@ -139,10 +139,9 @@ exports.updateCart = async (req, res) => {
     const userId = req.user.id;
     const updatedItem = req.body; // {productId, quantity}
 
-    if (!updatedItem.productId || typeof updatedItem.quantity !== "number") {
-      return res
-        .status(400)
-        .json({ message: "Product ID and quantity are needed" });
+
+    if (!updatedItem.productId || typeof updatedItem.quantity !== 'number') {
+      return res.status(400).json({ message: "Product ID and quantity are required" }); 
     }
 
     const user = await User.findById(userId);
@@ -157,7 +156,6 @@ exports.updateCart = async (req, res) => {
     // Delete product if quantity is 0
     if (updatedProductIndex > -1 && updatedItem.quantity <= 0) {
       user.cart.splice(updatedProductIndex, 1);
-      //  console.log("Product removed. Updated cart:", user.cart);
     }
     // Update quantity
     else if (updatedProductIndex > -1) {
