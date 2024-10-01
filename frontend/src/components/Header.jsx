@@ -21,19 +21,14 @@ const Header = () => {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // 使用 useMemo 确保防抖函数不会在每次渲染时都重新创建
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((query) => {
-        if (query.trim() !== "") {
-          dispatch(searchProducts({ query })); // 调用 Redux 中的 searchProducts
-          navigate(`/search?query=${query}`); // 导航到搜索页面
-        }
-      }, 500),
-    [dispatch, navigate]
-  ); // 500ms 防抖延迟
+  const debouncedSearch = useMemo(() =>
+    debounce((query) => {
+      if (query.trim() !== "") {
+        dispatch(searchProducts({ query }));
+        navigate(`/search?query=${query}`);
+      }
+    }, 500), [dispatch, navigate]);
 
-  // 当搜索框的值改变时调用 debouncedSearch
   const handleInputChange = (e) => {
     const value = e.target.value;
     setSearchQuery(value);
