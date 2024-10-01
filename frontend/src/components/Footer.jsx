@@ -1,45 +1,52 @@
-import React from "react";
-import "@fortawesome/fontawesome-free/css/all.min.css"; // Import FontAwesome CSS
+import { Container, Row, Col, Nav } from "react-bootstrap";
+import { FaHome, FaTwitter, FaInstagram, FaFacebook } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <div className="container-fluid">
-      <footer className="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-        <div className="col-md-4 d-flex align-items-center">
+    <Container fluid className="py-3 border-top bg-light fixed-bottom">
+      <Row className="align-items-center">
+        {/* Left Side: Home Icon and Company Info */}
+        <Col xs={6} md={4} lg={9} className="d-flex align-items-center">
           <a
             href="/"
-            className="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1"
+            className="me-2 text-body-secondary text-decoration-none lh-1"
           >
-            <i className="fas fa-home" style={{ fontSize: "24px" }}></i>{" "}
-            {/* Home Icon */}
+            <FaHome size={24} /> {/* Home Icon */}
           </a>
-          <span className="mb-3 mb-md-0 text-body-secondary">
-            &copy; 2024 Company, Inc
-          </span>
-        </div>
+          <span className="text-body-secondary">&copy; 2024 Company, Inc</span>
+        </Col>
 
-        <ul className="nav col-md-4 justify-content-end list-unstyled d-flex">
-          <li className="ms-3">
-            <a className="text-body-secondary" href="#">
-              <i className="fab fa-twitter" style={{ fontSize: "24px" }}></i>{" "}
-              {/* Twitter Icon */}
-            </a>
-          </li>
-          <li className="ms-3">
-            <a className="text-body-secondary" href="#">
-              <i className="fab fa-instagram" style={{ fontSize: "24px" }}></i>{" "}
-              {/* Instagram Icon */}
-            </a>
-          </li>
-          <li className="ms-3">
-            <a className="text-body-secondary" href="#">
-              <i className="fab fa-facebook" style={{ fontSize: "24px" }}></i>{" "}
-              {/* Facebook Icon */}
-            </a>
-          </li>
-        </ul>
-      </footer>
-    </div>
+        {/* Right Side: Social Media Icons */}
+        <Col xs={6} md={4} lg={3} className="d-flex justify-content-end">
+          <Nav as="ul" className="list-unstyled d-flex">
+            <Nav.Item as="li" className="ms-3">
+              <Nav.Link
+                href="https://x.com/"
+                className="text-body-secondary p-0"
+              >
+                <FaTwitter size={24} /> {/* Twitter Icon */}
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li" className="ms-3">
+              <Nav.Link
+                href="https://www.instagram.com/"
+                className="text-body-secondary p-0"
+              >
+                <FaInstagram size={24} /> {/* Instagram Icon */}
+              </Nav.Link>
+            </Nav.Item>
+            <Nav.Item as="li" className="ms-3">
+              <Nav.Link
+                href="https://www.facebook.com/"
+                className="text-body-secondary p-0"
+              >
+                <FaFacebook size={24} /> {/* Facebook Icon */}
+              </Nav.Link>
+            </Nav.Item>
+          </Nav>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

@@ -145,6 +145,21 @@ const EditProductForm = ({ product }) => {
         />
       </Form.Group>
 
+      <Form.Group className="mb-3" controlId="formProductImagePreview">
+        <Form.Label>Image Preview</Form.Label>
+        {product.imageUrl ? (
+          <div>
+            <img
+              src={formData.imageUrl}
+              alt="Product Preview"
+              style={{ width: "100%", maxWidth: "300px", height: "auto" }}
+            />
+          </div>
+        ) : (
+          <p>No image to preview</p>
+        )}
+      </Form.Group>
+
       {/* Show success alert */}
       {showAlert && (
         <Alert

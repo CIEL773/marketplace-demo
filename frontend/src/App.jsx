@@ -12,7 +12,7 @@ import AddProductPage from "./pages/AddProductPage";
 import EditProductPage from "./pages/EditProductPage";
 import SearchResults from "./components/SearchResults";
 import ErrorPage from "./pages/ErrorPage";
-import UpdatePasswordPage from "./pages/UpdatePasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ResetSuccessPage from "./pages/ResetSuccessPage";
 
 import { useDispatch } from "react-redux";
@@ -29,7 +29,7 @@ function App() {
     }
   }, [dispatch]);
   return (
-    <div className="d-flex flex-column min-vh-100">
+    <div className="d-flex flex-column min-vh-100 py-5">
       <Header />
       <main className="flex-fill">
         <Routes>
@@ -42,7 +42,7 @@ function App() {
           <Route path="/addproduct" element={<AddProductPage />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/editproduct/:id" element={<EditProductPage />} />
-          <Route path="/updatepassword" element={<UpdatePasswordPage />} />
+          <Route path="/resetpassword" element={<ResetPasswordPage />} />
           <Route path="/resetsuccess" element={<ResetSuccessPage />} />
           <Route path="*" element={<ErrorPage />} />
 

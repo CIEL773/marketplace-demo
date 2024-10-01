@@ -10,11 +10,14 @@ export const getCart = createAsyncThunk(
       // console.log("token in cartslice", token); // correct
       // const userInfo = localStorage.getItem("userInfo")
 
-      const response = await axios.get("http://localhost:4000/api/users/getCart", {
-        headers: {
-          Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:4000/api/users/getCart",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+          },
+        }
+      );
       //        console.log(response.data);
       return response.data;
     } catch (error) {
@@ -84,7 +87,6 @@ const cartSlice = createSlice({
       .addCase(updateCart.fulfilled, (state, action) => {
         state.loading = false;
         state.cartItems = action.payload; // Update the cart items
-        // console.log("payload", payload);
       })
       .addCase(updateCart.rejected, (state, action) => {
         state.loading = false;

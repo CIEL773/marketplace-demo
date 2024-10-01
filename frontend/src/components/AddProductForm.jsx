@@ -10,7 +10,9 @@ import { Alert } from "react-bootstrap";
 
 const AddProductForm = () => {
   const dispatch = useDispatch();
-  const { loading, error, addedSuccess } = useSelector((state) => state.product);
+  const { loading, error, addedSuccess } = useSelector(
+    (state) => state.product
+  );
 
   const [product, setProduct] = useState({
     name: "",
@@ -135,6 +137,21 @@ const AddProductForm = () => {
           onChange={handleChange}
           required
         />
+      </Form.Group>
+
+      <Form.Group className="mb-3" controlId="formProductImagePreview">
+        <Form.Label>Image Preview</Form.Label>
+        {product.imageUrl ? (
+          <div>
+            <img
+              src={product.imageUrl}
+              alt="Product Preview"
+              style={{ width: "100%", maxWidth: "300px", height: "auto" }}
+            />
+          </div>
+        ) : (
+          <p>No image to preview</p>
+        )}
       </Form.Group>
 
       {/* Show success alert */}
