@@ -20,9 +20,6 @@ const SearchResults = () => {
     }
   }, [dispatch, query]);
 
-  // console.log(query);
-  // console.log(products);
-
   return (
     <div className="container">
       <h2>Search Results</h2>
@@ -30,9 +27,9 @@ const SearchResults = () => {
       {error && <p>Error: {error}</p>}
       
       <div className="row">
-        {products.length === 0 && !loading && (
+        {/* {products.length === 0 && !loading && (
           <p>No products found for "{query}"</p>
-        )}
+        )} */}
         {products.map((product) => (
           <div key={product._id} className="col-md-4">
             <ProductItem product={product} />
