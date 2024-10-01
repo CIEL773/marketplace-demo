@@ -15,5 +15,8 @@ router.get("/getCart", auth, userController.getCart);
 router.post("/resetPassword", userController.resetPassword);
 
 router.post("/signout", userController.signout);
+
+router.put('/updateAddress', auth, userController.updateAddress);
+
 module.exports = router;
 

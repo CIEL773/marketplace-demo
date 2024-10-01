@@ -88,7 +88,7 @@ const SignupPage = () => {
                 Please select
               </option>
               <option value="vendor">Vendor</option>
-              <option value="customer">Customer</option>
+              <option value="User">Customer</option>
             </select>
             <label htmlFor="floatingSelect">User Type</label>
           </div>

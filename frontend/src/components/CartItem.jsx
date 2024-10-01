@@ -16,8 +16,14 @@ function CartItem({ product, onIncreaseQuantity, onDecreaseQuantity }) {
           <Col>
             <Card.Img
               variant="top"
-              src={product.image || "https://picsum.photos/150"}
+              src={product.imageUrl || "https://picsum.photos/150"}
               alt={product.name}
+              style={{
+                width: "100%",        // Make the image fill the card's width
+                height: "auto",      // Maintain aspect ratio
+                aspectRatio: "1 / 1", // Keep the image square
+                objectFit: "cover"   // Cover the entire area without distortion
+              }}
             />
           </Col>
           <Col>

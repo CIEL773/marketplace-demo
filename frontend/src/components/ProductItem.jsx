@@ -9,17 +9,31 @@ const ProductItem = ({ product }) => {
   const dispatch = useDispatch();
   const { loading, error } = useSelector((state) => state.cart);
   const { userInfo } = useSelector((state) => state.user);
+  const { cartItems } = useSelector((state) => state.cart);
 
   const handleViewDetails = () => {
     navigate(`/products/${product._id}`);
   };
 
   const onAddToCart = (product) => {
-    const cartData = {
-      productId: product._id,
-      quantity: 1,
+    const items = Array.isArray(cartItems) ? cartItems : [];
+    const existingCartItem = items.find((item) => item.productId === product._id);
+
+    if (existingCartItem) {
+      // If the product is already in the cart, increase its quantity by 1
+      const updatedItem = {
+        productId: product._id,
+        quantity: existingCartItem.quantity + 1,
+      };
+      dispatch(updateCart(updatedItem));
+    } else {
+      // If the product is not in the cart, add it with a quantity of 1
+      const newItem = {
+        productId: product._id,
+        quantity: 1,
+      };
+      dispatch(updateCart(newItem));
     };
-    dispatch(updateCart(cartData));
   };
 
   const onEdit = () => {
@@ -28,10 +42,16 @@ const ProductItem = ({ product }) => {
   };
 
   return (
-    <Card className="mb-3 shadow-sm">
+    <Card className="mb-3 shadow-sm ">
       <Card.Img
         variant="top"
-        src={product.image || "https://picsum.photos/150"}
+        style={{
+          width: "100%",        // Make the image fill the card's width
+          height: "auto",      // Maintain aspect ratio
+          aspectRatio: "1 / 1", // Keep the image square
+          objectFit: "cover"   // Cover the entire area without distortion
+        }}
+        src={product.imageUrl || "https://picsum.photos/150"}
         alt={product.name}
         onClick={handleViewDetails}
       />
