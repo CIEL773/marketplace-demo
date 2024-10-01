@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from "react-redux";
 import { signinUser } from "../features/usersSlice";
-import { useNavigate, Link} from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 
 const SigninPage = () => {
@@ -56,9 +56,13 @@ const SigninPage = () => {
 
 
 
+          
           <button className="btn btn-primary w-100 py-2" type="submit" disabled={loading}>
             {loading ? "Signing in..." : "Sign in"}
           </button>
+            <div className="d-flex justify-content-center align-items-center mt-3">
+            <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
+          </div>
 
           <div className="d-flex justify-content-center align-items-center mt-3">
             <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>

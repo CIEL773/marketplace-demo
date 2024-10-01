@@ -2,22 +2,26 @@ const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("../jwt");
 const sgMail = require("@sendgrid/mail");
+require('dotenv').config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.resetPassword = async (req, res) => {
   try {
     const {email} = req.body;
+    // if (!user){
+    //   return res.status(404).json({message: "User not found"});
+    // }
 
-    const user = await User.findOne({email});
-    if (!user){
-      return res.status(404).json({message: "User not found"});
-    }
 
     const defaultPassword = "111111";
     const hashedPassword = await bcrypt.hash(defaultPassword, 12);
-
-    user.password = hashedPassword;
-    await user.save();
+    const user = await User.findOneAndUpdate(
+      { email: email.email },
+      { $set: { password: hashedPassword } }, 
+      { new: true }
+     );
+    // user.password = hashedPassword;
+    // await user.save();
 
     const msg = {
       to: user.email,
@@ -26,7 +30,11 @@ exports.resetPassword = async (req, res) => {
       text: `Hello ${user.name}. Your password has been reset to ${defaultPassword}. Please update it on your User Info page after log in`,
     }
 
+    console.log("Preparing to send email...");
+
     await sgMail.send(msg);
+
+    console.log("Email sent");
 
     res.status(200).json({ message: "Password has been reset and an email has been sent." });
   }catch (err) {
