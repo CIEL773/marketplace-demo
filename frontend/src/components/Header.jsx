@@ -103,14 +103,14 @@ const Header = () => {
                   onChange={handleInputChange}
                   className="me-2"
                 />
-                <Button
+                {/* <Button
                   variant="outline-primary"
                   type="submit"
                   onClick={handleSearchClick}
                   disabled={signoutLoading} // Disable button when signing out
                 >
                   Search
-                </Button>
+                </Button> */}
 
               </Form>
               {/* Search Bar for Small Screens */}

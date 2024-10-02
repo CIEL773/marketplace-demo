@@ -18,6 +18,7 @@ const UpdatePassword = () => {
     }
   }, [navigate, userInfo]);
 
+  // error handling!!
   const submitForm = (data) => {
     console.log(data)
     if (userInfo) {

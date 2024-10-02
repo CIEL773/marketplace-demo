@@ -64,10 +64,6 @@ const SigninPage = () => {
             <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
           </div>
 
-          <div className="d-flex justify-content-center align-items-center mt-3">
-            <Link to='/resetpassword' className="btn btn-link">Forget Password?</Link>
-          </div>
-
           {error && <p className="text-danger mt-3">{error}</p>}
         </form>
       </main>
